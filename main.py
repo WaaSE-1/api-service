@@ -21,7 +21,7 @@ async def register_user(User: User):
 
 
 # Request to verify a user
-@app.get("/login")
+@app.post("/login")
 async def login_user(email: str, password: str):
     
     user = db.find_user(email)
