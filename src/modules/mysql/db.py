@@ -21,12 +21,14 @@ class DBConnection:
         """
         self.cursor.execute(insert_query)
         self.conn.commit()
+        self.cursor.close()
         return 200
 
-    def find_user(email: str):
-        return {
-            "id": 1,
-            "name": "Rick Astley",
-            "email": "toms@gmail.com",
-            "password": "argon2",
-        }
+    def find_user(self, email: str):
+        insert_query = f"""
+            SELECT * FROM customer WHERE email='{email}'
+        """
+        self.cursor.execute(insert_query)
+        user = self.cursor.fetchone()
+        self.cursor.close()
+        return user
