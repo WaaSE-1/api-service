@@ -24,11 +24,18 @@ class DBConnection:
         self.cursor.close()
         return 200
 
-    def find_user(self, email: str):
-        insert_query = f"""
-            SELECT * FROM customer WHERE email='{email}'
+    def find_user_by_email(self, email: str):
         """
-        self.cursor.execute(insert_query)
-        user = self.cursor.fetchone()
+        find_user Finds a user account by their email address.
+
+        Args:
+            email (str): Email address that will be used to look up the user
+
+        Returns:
+            tuple: User details
+        """
+        self.cursor.callproc("FindCustomerByEmail", [email])
+        user = [i.fetchone() for i in self.cursor.stored_results()][0]
+        self.conn.commit()
         self.cursor.close()
         return user
