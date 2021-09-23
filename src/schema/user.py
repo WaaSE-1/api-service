@@ -1,8 +1,11 @@
-from typing import List, Optional
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel
+
 
 class User(BaseModel):
-    id: int
-    name: str
+    firstname: str
+    lastname: str
     email: str
+    phonenumber: str
+    loc_id: int
+    address: str
     password: str

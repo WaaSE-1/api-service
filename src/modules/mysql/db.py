@@ -15,14 +15,32 @@ class DBConnection:
         self.cursor = self.conn.cursor()
 
     def create_user(self, user):
-        insert_query = f"""
-            INSERT INTO customer (firstname, lastname, email, phone_number, location_id, address, password)
-            VALUES ('{user.firstname}', '{user.lastname}', '{user.email}', '{user.phonenumber}', '{user.loc_id}', '{user.address}', {user.password});
         """
-        self.cursor.execute(insert_query)
+        create_user Saves the created user to the database
+
+        Args:
+            user (User): Data for the user account that was created before.
+
+        Returns:
+            tuple: Created user account
+        """
+        values = [
+            user.firstname,
+            user.lastname,
+            user.email,
+            user.phonenumber,
+            user.loc_id,
+            user.address,
+            user.password,
+        ]
+
+        self.cursor.callproc("CreateNewCustomer", values)
         self.conn.commit()
+
+        user = self.find_user_by_email(user.email)
         self.cursor.close()
-        return 200
+
+        return user
 
     def find_user_by_email(self, email: str):
         """
@@ -32,10 +50,9 @@ class DBConnection:
             email (str): Email address that will be used to look up the user
 
         Returns:
-            tuple: User details
+            tuple: Located User account
         """
         self.cursor.callproc("FindCustomerByEmail", [email])
         user = [i.fetchone() for i in self.cursor.stored_results()][0]
-        self.conn.commit()
         self.cursor.close()
         return user
