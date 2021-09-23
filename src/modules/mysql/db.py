@@ -24,17 +24,7 @@ class DBConnection:
         Returns:
             tuple: Created user account
         """
-        values = [
-            user.firstname,
-            user.lastname,
-            user.email,
-            user.phonenumber,
-            user.loc_id,
-            user.address,
-            user.password,
-        ]
-
-        self.cursor.callproc("CreateNewCustomer", values)
+        self.cursor.callproc("CreateNewCustomer", user.get_values())
         self.conn.commit()
 
         user = self.find_user_by_email(user.email)
