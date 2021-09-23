@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from src.schema.user import User
 from argon2 import PasswordHasher
 from src.modules.mysql.db import DBConnection
-
+import re
 
 app = FastAPI()
 
@@ -13,14 +13,14 @@ app = FastAPI()
 # Request to register a user
 @app.post("/register")
 async def register_user(User: User):
-
-    # Store the hashed password in the User object.
-    User.password = PasswordHasher().hash(User.password)
-
-    # Connect to Db, find if user email already exists, if it doesn't register user, if else return false. 
     db = DBConnection()
-    email = User.email
-    if db.find_user_by_email(email) is None: 
+    # Check if the password matches the criteria
+    if not re.match(r"[A-Za-z0-9@#$%^&+=]{8,32}", User.password):
+        return False
+
+    if db.find_user_by_email(User.email) is None:
+        # Store the hashed password in the User object.
+        User.password = PasswordHasher().hash(User.password)
         db.create_user(User)
     else:
         return False
@@ -30,7 +30,7 @@ async def register_user(User: User):
 @app.post("/login")
 async def login_user(email: str, password: str):
     db = DBConnection()
-    user = db.find_user(email)
+    user = db.find_user_by_email(User.email)
 
     # Check if the user exists in the database, return something if it doesn't
     if user is None:
