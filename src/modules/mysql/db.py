@@ -27,10 +27,7 @@ class DBConnection:
         self.cursor.callproc("CreateNewCustomer", user.get_values())
         self.conn.commit()
 
-        user = self.find_user_by_email(user.email)
-        self.cursor.close()
-
-        return user
+        return self.find_user_by_email(user.email)
 
     def find_user_by_email(self, email: str):
         """
@@ -43,6 +40,4 @@ class DBConnection:
             tuple: Located User account
         """
         self.cursor.callproc("FindCustomerByEmail", [email])
-        user = [i.fetchone() for i in self.cursor.stored_results()][0]
-        self.cursor.close()
-        return user
+        return [i.fetchone() for i in self.cursor.stored_results()][0]
