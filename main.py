@@ -17,9 +17,13 @@ async def register_user(User: User):
     # Store the hashed password in the User object.
     User.password = PasswordHasher().hash(User.password)
 
-    # Create user and parse to db file
+    # Connect to Db, find if user email already exists, if it doesn't register user, if else return false. 
     db = DBConnection()
-    db.create_user(User)
+    email = User.email
+    if db.find_user_by_email(email) is None: 
+        db.create_user(User)
+    else:
+        return False
 
 
 # Request to verify a user
