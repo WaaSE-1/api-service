@@ -42,3 +42,10 @@ async def login_user(email: str, password: str):
         return True
     except:
         return False
+
+@app.post("/delete")
+async def delete_user(email: str):
+    db = DBConnection()
+    user = db.find_user_by_email(email)
+    if user is not None:
+        db.delete_user(email)

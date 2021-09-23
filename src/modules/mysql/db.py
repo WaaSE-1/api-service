@@ -41,3 +41,8 @@ class DBConnection:
         """
         self.cursor.callproc("FindCustomerByEmail", [email])
         return [i.fetchone() for i in self.cursor.stored_results()][0]
+        
+    def delete_user(self, email):
+        # Delete the specific customer from the customers table.
+        self.cursor.execute(f"DELETE FROM customer WHERE email='{email}';")
+        self.conn.commit()
