@@ -42,7 +42,7 @@ class DBConnection:
         Args:
             email (str): Email address that will be used to locate the user
         """
-        self.cursor.execute(f"DELETE FROM customer WHERE email='{email}';")
+        self.cursor.callproc("DeleteUser", [email])
         self.conn.commit()
 
     def __del__(self):

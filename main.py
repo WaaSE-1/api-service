@@ -12,13 +12,12 @@ app = FastAPI()
 @app.post("/register", status_code=201)
 async def register_user(User: User, response: Response):
 
-    db = DBConnection()
     # Check if the password matches the criteria
     if not re.match(r"[A-Za-z0-9@#$%^&+=]{8,32}", User.password):
         response.status_code = status.HTTP_400_BAD_REQUEST
-        del db
         return {"error": "Password does not meet the set criteria!"}
 
+    db = DBConnection()
     # Check if the user account already exists
     if db.find_user_by_email(User.email):
         del db
