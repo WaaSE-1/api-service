@@ -9,11 +9,14 @@ stages:
     - job: BuildDeploy 
       displayName: "Build & deploy to development"
       steps:
+      - script: |
+              docker login -u waasegroup  --password "Waasegroup69!"
+        displayName: 'Login to Docker'
 
       - task: Docker@2
         displayName: Build docker image
         inputs:
-          repository: waasegroup/api-service
+          repository: docker.io/waasegroup/api-service
           command: build
           Dockerfile: Dockerfile
           tags: latest
@@ -22,5 +25,5 @@ stages:
         displayName: Docker Push
         inputs:
           command: push
-          repository: waasegroup/api-service
+          repository: docker.io/waasegroup/api-service
           tags: latest
