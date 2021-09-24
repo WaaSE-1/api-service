@@ -20,14 +20,12 @@ async def register_user(User: User, response: Response):
     db = DBConnection()
     # Check if the user account already exists
     if db.find_user_by_email(User.email):
-        del db
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"error": "User with this email address already exists!"}
 
     # Store the hashed password in the User object.
     User.password = PasswordHasher().hash(User.password)
     user = db.create_user(User)
-    del db
     return user
 
 
@@ -37,7 +35,6 @@ async def login_user(email: str, password: str, response: Response):
 
     db = DBConnection()
     user = db.find_user_by_email(email)
-    del db
 
     # Check if the user account does not exist.
     if user is None:
@@ -65,5 +62,4 @@ async def delete_user(email: str, response: Response):
 
     # Delete the account and return success.
     db.delete_user(email)
-    del db
     return {"success": "Succesfully deleted the user account!"}
