@@ -13,14 +13,14 @@ stages:
       - task: Docker@2
         displayName: Build docker image
         inputs:
-          repository: waasegroup/api-service:latest
+          repository: waasegroup/api-service
           command: build
           Dockerfile: Dockerfile
-          tags: dev
+          tags: latest
 
       - task: Docker@2
         displayName: Docker Push
         inputs:
           command: push
-          repository: waasegroup/api-service:latest
-          tags: dev
+          repository: waasegroup/api-service
+          tags: latest
