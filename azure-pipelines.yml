@@ -6,6 +6,6 @@ pool:
 stages:
  - stage: Development
    jobs:
-     - template: pipeline/build-deploy-dev.yml
+     - template: build-deploy-dev.yml
        parameters:
          environment: dev
