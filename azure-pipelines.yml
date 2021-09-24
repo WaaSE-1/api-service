@@ -1,0 +1,11 @@
+trigger:
+  - main
+pool:
+  vmImage: 'ubuntu-20.04'
+
+stages:
+ - stage: Development
+   jobs:
+     - template: pipeline/build-deploy-dev.yml
+       parameters:
+         environment: dev
