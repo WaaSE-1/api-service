@@ -1,8 +1,11 @@
 import re
+from src.settings.envvariables import Settings
 from argon2 import PasswordHasher
 from fastapi import FastAPI, Response, status
 from src.modules.mysql.db import DBConnection
 from src.schema.user import User
+
+
 
 app = FastAPI()
 
@@ -31,6 +34,7 @@ async def register_user(User: User, Response: Response):
 async def login_user(email: str, password: str):
     db = DBConnection()
     user = db.find_user_by_email(User.email)
+    
 
     # Check if the user exists in the database, return something if it doesn't
     if user is None:
@@ -50,3 +54,4 @@ async def delete_user(email: str):
     user = db.find_user_by_email(email)
     if user is not None:
         db.delete_user(email)
+

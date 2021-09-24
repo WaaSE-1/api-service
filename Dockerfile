@@ -6,6 +6,11 @@ ADD main.py /app
 
 WORKDIR /app
 
+ENV DB_HOSTNAME={DB_HOSTNAME}
+ENV DB_USERNAME={DB_USERNAME}
+ENV DB_PASSWORD={DB_PASSWORD}
+ENV DB_DATABASE={DB_DATABASE}
+
 RUN pip install --upgrade pip && \
 pip install -r ./requirements.txt
 

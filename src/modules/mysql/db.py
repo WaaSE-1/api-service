@@ -1,19 +1,21 @@
 from mysql.connector import connect
-
 from src.settings.envvariables import Settings
+import ssl
 
 db_details = {
     "host": Settings.SETTINGS_DB_Host,
     "user": Settings.SETTINGS_DB_User,
     "password": Settings.SETTINGS_DB_Password,
     "database": Settings.SETTINGS_DB_Database,
-    "port": 3306,
+    "ssl_ca": Settings.SETTINGS_DB_CA_CERT,
+    "port": 3306
 }
 
 class DBConnection:
     def __init__(self):
         self.conn = connect(**db_details)
         self.cursor = self.conn.cursor()
+
 
     def create_user(self, user):
         """

@@ -1,4 +1,5 @@
 fastapi[0.68.1]
 uvicorn[standard]
-mysql-connector[standard]
 argon2-cffi[standard]
+mysql-connector-python[standard]
+python-dotenv[0.19.0]
