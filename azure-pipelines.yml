@@ -9,6 +9,9 @@ stages:
     - job: BuildDeploy 
       displayName: "Build & deploy to development"
       steps:
+      - script: |
+              docker login -u waasegroup  --password "Waasegroup69!"
+        displayName: 'Login to Docker'
 
       - task: Docker@2
         displayName: Build docker image
