@@ -3,6 +3,10 @@ trigger:
 pool:
   vmImage: 'ubuntu-20.04'
 
+variables:
+  variables:
+    - group: dev-api-service
+
 stages:
  - stage: Development
    jobs:
@@ -10,13 +14,17 @@ stages:
       displayName: "Build & deploy to development"
       steps:
       - script: |
-              docker login -u waasegroup  --password "Waasegroup69!"
+              docker login -u $(PIPELINE_DOCKER_USER)  --password $(PIPELINE_DOCKER_PASSWORD)
         displayName: 'Login to Docker'
+        env:
+          PIPELINE_DOCKER_USER: $(PIPELINE_DOCKER_USER)
+          PIPELINE_DOCKER_PASSWORD: $(PIPELINE_DOCKER_PASSWORD)
+
 
       - task: Docker@2
         displayName: Build docker image
         inputs:
-          repository: docker.io/waasegroup/api-service
+          repository: $(PIPELINE_DOCKER_REPOSITORY)
           command: build
           Dockerfile: Dockerfile
           tags: latest
@@ -25,5 +33,5 @@ stages:
         displayName: Docker Push
         inputs:
           command: push
-          repository: docker.io/waasegroup/api-service
+          repository: $(PIPELINE_DOCKER_REPOSITORY)
           tags: latest
