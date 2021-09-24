@@ -1,21 +1,11 @@
 from mysql.connector import connect
 from src.settings.envvariables import Settings
-import ssl
 
-db_details = {
-    "host": Settings.SETTINGS_DB_Host,
-    "user": Settings.SETTINGS_DB_User,
-    "password": Settings.SETTINGS_DB_Password,
-    "database": Settings.SETTINGS_DB_Database,
-    "ssl_ca": Settings.SETTINGS_DB_CA_CERT,
-    "port": 3306
-}
 
 class DBConnection:
     def __init__(self):
-        self.conn = connect(**db_details)
+        self.conn = connect(**Settings().db_details())
         self.cursor = self.conn.cursor()
-
 
     def create_user(self, user):
         """
@@ -44,8 +34,18 @@ class DBConnection:
         """
         self.cursor.callproc("FindCustomerByEmail", [email])
         return [i.fetchone() for i in self.cursor.stored_results()][0]
-        
+
     def delete_user(self, email):
-        # Delete the specific customer from the customers table.
+        """
+        delete_user Deletes a user account by their email address.
+
+        Args:
+            email (str): Email address that will be used to locate the user
+        """
         self.cursor.execute(f"DELETE FROM customer WHERE email='{email}';")
         self.conn.commit()
+
+    def __del__(self):
+        # Garbage collector goes brrr....
+        self.cursor.close()
+        self.conn.close()

@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.security.api_key import APIKeyHeader
 from pathlib import Path
 
+
 class Settings:
     load_dotenv()
 
@@ -11,12 +12,24 @@ class Settings:
     CURRENT_DIR = str(Path(os.getcwd()))
 
     # DB SETTINGS
-    SETTINGS_DB_Host = os.getenv('DB_HOSTNAME')
-    SETTINGS_DB_User = os.getenv('DB_USERNAME')
-    SETTINGS_DB_Password = os.getenv('DB_PASSWORD')
-    SETTINGS_DB_Database = os.getenv('DB_DATABASE')
-    SETTINGS_DB_CA_CERT = os.path.join(os.path.realpath(CURRENT_DIR), Path('src/settings/cardealership-dbCA.crt.pem'))
+    SETTINGS_DB_Host = os.getenv("DB_HOSTNAME")
+    SETTINGS_DB_User = os.getenv("DB_USERNAME")
+    SETTINGS_DB_Password = os.getenv("DB_PASSWORD")
+    SETTINGS_DB_Database = os.getenv("DB_DATABASE")
+    SETTINGS_DB_PORT = 3306
+    SETTINGS_DB_CA_CERT = os.path.join(
+        os.path.realpath(CURRENT_DIR), Path("src/settings/cardealership-dbCA.crt.pem")
+    )
 
     # OTHERS
     envvar = 0
-    
+
+    def db_details(self):
+        return {
+            "host": self.SETTINGS_DB_Host,
+            "user": self.SETTINGS_DB_User,
+            "password": self.SETTINGS_DB_Password,
+            "database": self.SETTINGS_DB_Database,
+            "ssl_ca": self.SETTINGS_DB_CA_CERT,
+            "port": self.SETTINGS_DB_PORT,
+        }
