@@ -6,19 +6,21 @@ pool:
 stages:
  - stage: Development
    jobs:
-    - task: Docker@2
-      displayName: Build docker image
-      inputs:
-        repository: waasegroup/api-service:latest
-        command: build
-        Dockerfile: Dockerfile
-        tags: dev
+    - job: BuildDeploy 
+      displayName: "Build & deploy to development"
+      steps:
 
-    - task: Docker@2
-      displayName: Docker Push
-      inputs:
-        command: push
-        repository: waasegroup/api-service:latest
-        tags: dev
-  
+      - task: Docker@2
+        displayName: Build docker image
+        inputs:
+          repository: $(PIPELINE_DOCKER_REPOSITORY)
+          command: build
+          Dockerfile: Dockerfile
+          tags: dev
 
+      - task: Docker@2
+        displayName: Docker Push
+        inputs:
+          command: push
+          repository: $(PIPELINE_DOCKER_REPOSITORY)
+          tags: dev
