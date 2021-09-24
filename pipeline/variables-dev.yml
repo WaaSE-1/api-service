@@ -1,2 +1,4 @@
 variables:
   - group: dev-api-service
+  - name: $(PIPELINE_DOCKER_REPOSITORY)
+    value: docker.io/waasegroup/api-service
