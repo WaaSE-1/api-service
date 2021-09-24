@@ -6,6 +6,19 @@ pool:
 stages:
  - stage: Development
    jobs:
-     - template: build-deploy-dev.yml
-       parameters:
-         environment: dev
+    - task: Docker@2
+      displayName: Build docker image
+      inputs:
+        repository: waasegroup/api-service:latest
+        command: build
+        Dockerfile: Dockerfile
+        tags: dev
+
+    - task: Docker@2
+      displayName: Docker Push
+      inputs:
+        command: push
+        repository: waasegroup/api-service:latest
+        tags: dev
+  
+
