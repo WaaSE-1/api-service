@@ -1,13 +1,14 @@
 from mysql.connector import connect
 
+from src.settings.envvariables import Settings
+
 db_details = {
-    "host": "cardealership-db.mysql.database.azure.com",
-    "user": "cardealershipadmin",
-    "password": "nJi0HePX1DVdX8bSnXIEjc0S",
-    "database": "cardealership",
+    "host": Settings.SETTINGS_DB_Host,
+    "user": Settings.SETTINGS_DB_User,
+    "password": Settings.SETTINGS_DB_Password,
+    "database": Settings.SETTINGS_DB_Database,
     "port": 3306,
 }
-
 
 class DBConnection:
     def __init__(self):
