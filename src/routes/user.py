@@ -1,9 +1,12 @@
 import re
+
+from fastapi.routing import serialize_response
 from src.schema.user import User
 from fastapi import APIRouter, Response, status
 from src.modules.mysql.db import DBConnection
 from argon2 import PasswordHasher
 from src.modules.auth.auth import Auth
+import json, datetime
 
 app = APIRouter()
 
@@ -25,7 +28,7 @@ async def register_user(User: User, response: Response):
     # Store the hashed password in the User object.
     User.password = PasswordHasher().hash(User.password)
     db.create_user(User)
-    return Auth.create_token(User)
+    return Auth.create_token(User.dict())
 
 
 # Endpoint for login
@@ -34,16 +37,22 @@ async def login_user(email: str, password: str, response: Response):
 
     db = DBConnection()
     user = db.find_user_by_email(email)
-
     # Check if the user account does not exist.
     if not user:
         response.status_code = status.HTTP_404_NOT_FOUND
         return {"error": "User account was not found!"}
 
+    # Move it later to somewhere else or serialize datatime other way.
+    def defaultconverter(o):
+        if isinstance(o, datetime.datetime):
+            return o.__str__()
+
     # Make sure that user has provided correct password.
     try:
-        PasswordHasher().verify(user[7], password)
-        return {"success": "User has succesfully logged in!"}
+        PasswordHasher().verify(user["password"], password)
+        serialized_user = json.loads(json.dumps(user, default=defaultconverter))
+        token = Auth.create_token(serialized_user)
+        return {"success": "User has succesfully logged in!", "token": token}
     except:
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return {"error": "Provided password is incorrect!"}

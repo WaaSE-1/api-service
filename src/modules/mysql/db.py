@@ -5,7 +5,7 @@ from src.settings.envvariables import Settings
 class DBConnection:
     def __init__(self):
         self.conn = connect(**Settings().db_details())
-        self.cursor = self.conn.cursor()
+        self.cursor = self.conn.cursor(dictionary=True)
 
     def create_user(self, user):
         """
