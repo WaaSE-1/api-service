@@ -1,7 +1,5 @@
 import os
 from dotenv import load_dotenv
-from fastapi import FastAPI
-from fastapi.security.api_key import APIKeyHeader
 from pathlib import Path
 
 
@@ -11,25 +9,19 @@ class Settings:
     # Get current directory
     CURRENT_DIR = str(Path(os.getcwd()))
 
-    # DB SETTINGS
-    SETTINGS_DB_Host = os.getenv("DB_HOSTNAME")
-    SETTINGS_DB_User = os.getenv("DB_USERNAME")
-    SETTINGS_DB_Password = os.getenv("DB_PASSWORD")
-    SETTINGS_DB_Database = os.getenv("DB_DATABASE")
-    SETTINGS_DB_PORT = 3306
-    SETTINGS_DB_CA_CERT = os.path.join(
-        os.path.realpath(CURRENT_DIR), Path("src/settings/cardealership-dbCA.crt.pem")
-    )
-
     # OTHERS
     envvar = 0
+    JWT_SECRET = os.getenv("JWT_SECRET")
 
     def db_details(self):
         return {
-            "host": self.SETTINGS_DB_Host,
-            "user": self.SETTINGS_DB_User,
-            "password": self.SETTINGS_DB_Password,
-            "database": self.SETTINGS_DB_Database,
-            "ssl_ca": self.SETTINGS_DB_CA_CERT,
-            "port": self.SETTINGS_DB_PORT,
+            "host": os.getenv("DB_HOSTNAME"),
+            "user": os.getenv("DB_USERNAME"),
+            "password": os.getenv("DB_PASSWORD"),
+            "database": os.getenv("DB_DATABASE"),
+            "ssl_ca": os.path.join(
+                os.path.realpath(self.CURRENT_DIR),
+                Path("src/settings/cardealership-dbCA.crt.pem"),
+            ),
+            "port": 3306,
         }

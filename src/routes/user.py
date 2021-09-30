@@ -3,6 +3,7 @@ from src.schema.user import User
 from fastapi import APIRouter, Response, status
 from src.modules.mysql.db import DBConnection
 from argon2 import PasswordHasher
+from src.modules.auth.auth import Auth
 
 app = APIRouter()
 
@@ -23,7 +24,8 @@ async def register_user(User: User, response: Response):
 
     # Store the hashed password in the User object.
     User.password = PasswordHasher().hash(User.password)
-    return db.create_user(User)
+    db.create_user(User)
+    return Auth.create_token(User)
 
 
 # Endpoint for login
