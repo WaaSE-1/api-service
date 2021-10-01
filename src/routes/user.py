@@ -1,5 +1,5 @@
 import re
-
+from typing import Dict, Any
 from fastapi.routing import serialize_response
 from src.schema.user import User
 from fastapi import APIRouter, Response, status
@@ -33,10 +33,9 @@ async def register_user(User: User, response: Response):
 
 # Endpoint for login
 @app.post("/login", status_code=200)
-async def login_user(email: str, password: str, response: Response):
-
+async def login_user(user_data: Dict[Any, Any], response: Response):
     db = DBConnection()
-    user = db.find_user_by_email(email)
+    user = db.find_user_by_email(user_data["email"])
     # Check if the user account does not exist.
     if not user:
         response.status_code = status.HTTP_404_NOT_FOUND
@@ -49,7 +48,7 @@ async def login_user(email: str, password: str, response: Response):
 
     # Make sure that user has provided correct password.
     try:
-        PasswordHasher().verify(user["password"], password)
+        PasswordHasher().verify(user["password"], user_data["password"])
         serialized_user = json.loads(json.dumps(user, default=defaultconverter))
         token = Auth.create_token(serialized_user)
         return {"success": "User has succesfully logged in!", "token": token}
@@ -59,9 +58,9 @@ async def login_user(email: str, password: str, response: Response):
 
 
 @app.post("/delete", status_code=200)
-async def delete_user(email: str, response: Response):
+async def delete_user(user_data: Dict[Any, Any], response: Response):
     db = DBConnection()
-    user = db.find_user_by_email(email)
+    user = db.find_user_by_email(user_data["email"])
 
     # Check if the user account does not exist
     if not user:
@@ -69,5 +68,5 @@ async def delete_user(email: str, response: Response):
         return {"error": "User account was not found!"}
 
     # Delete the account and return success.
-    db.delete_user(email)
+    db.delete_user(user_data["email"])
     return {"success": "Succesfully deleted the user account!"}
