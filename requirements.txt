@@ -4,3 +4,4 @@ argon2-cffi[standard]
 mysql-connector-python[standard]
 python-dotenv[0.19.0]
 PyJWT[2.1.0]
+passlib==1.7.4
