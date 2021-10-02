@@ -1,1 +1,1 @@
-from src.schema import user, auth
+from src.schema import user

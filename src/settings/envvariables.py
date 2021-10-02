@@ -4,15 +4,16 @@ from pathlib import Path
 
 
 class Settings:
+    # Load environment envirables
     load_dotenv()
 
     # Get current directory
     CURRENT_DIR = str(Path(os.getcwd()))
-
-    # OTHERS
-    envvar = 0
+    
+    # JWT Secret required for authentication
     JWT_SECRET = os.getenv("JWT_SECRET")
 
+    # MySQL connection details
     def db_details(self):
         return {
             "host": os.getenv("DB_HOSTNAME"),
@@ -26,3 +27,5 @@ class Settings:
             "port": 3306,
         }
 
+    # OTHERS
+    envvar = 0
