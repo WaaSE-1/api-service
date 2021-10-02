@@ -6,5 +6,5 @@ import jwt
 class Auth:
     def create_token(user):
         del user["password"]
-        token = jwt.encode(user, Settings().JWT_SECRET or "kea123secret")
+        token = jwt.encode(user, Settings().JWT_SECRET)
         return dict(access_token=token, token_type="bearer")
