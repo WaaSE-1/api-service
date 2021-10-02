@@ -1,46 +1,43 @@
 import re
 from typing import Dict, Any
-from fastapi import APIRouter, Response, status, Depends
+from fastapi import APIRouter, Response, status
 from argon2 import PasswordHasher
 import json, datetime
 
 # Local packages
 from src.modules.mysql.db import DBConnection
-from src.modules.auth.core import Auth
-from src.schema import user
+from src.modules.auth.auth import Auth
+from src.schema.user import User
 
 app = APIRouter()
 
 
-
 # Request to register a user
 @app.post("/register", status_code=201)
-async def register_user(user: user.Register, response: Response):
+async def register_user(User: User, response: Response):
 
     # Check if the password matches the criteria
-    if not re.match(r"[A-Za-z0-9@#$%^&+=]{8,32}", user.password):
+    if not re.match(r"[A-Za-z0-9@#$%^&+=]{8,32}", User.password):
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"error": "Password does not meet the set criteria!"}
 
     db = DBConnection()
     # Check if the user account already exists
-    if db.find_user_by_email(user.email):
+    if db.find_user_by_email(User.email):
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"error": "User with this email address already exists!"}
 
     # Store the hashed password in the User object.
-    user.password = PasswordHasher().hash(user.password)
-    db.create_user(user)
-    return Auth.create_token(user.dict())
+    User.password = PasswordHasher().hash(User.password)
+    db.create_user(User)
+    return Auth.create_token(User.dict())
 
 
 # Endpoint for login
 @app.post("/login", status_code=200)
-async def login_user(user_data: user.Login, response: Response):
+async def login_user(user_data: Dict[Any, Any], response: Response):
     db = DBConnection()
-    user = db.find_user_by_email(user_data.email)
-
-
+    user = db.find_user_by_email(user_data["email"])
     # Check if the user account does not exist.
     if not user:
         response.status_code = status.HTTP_404_NOT_FOUND
@@ -51,29 +48,26 @@ async def login_user(user_data: user.Login, response: Response):
         if isinstance(o, datetime.datetime):
             return o.__str__()
 
+    # Make sure that user has provided correct password.
     try:
-        PasswordHasher().verify(user["password"], user_data.password)
+        PasswordHasher().verify(user["password"], user_data["password"])
         serialized_user = json.loads(json.dumps(user, default=defaultconverter))
         token = Auth.create_token(serialized_user)
         return {"success": "User has succesfully logged in!", "token": token}
-    except Exception as e:
+    except:
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return {"error": "Provided password is incorrect!"}
 
 
 # Endpoint for updating a user
-@app.put("/update" , status_code=200)
-async def update_user(user_data: user.Register, response: Response):
-
-    db = DBConnection()
-    user = db.find_user_by_email(user_data.Email)
-    db.update_user(user_data)
-
+@app.put("update" , status_code=200)
+async def update_user(User: User, response: Response):
+    print("do someting")
 
 @app.delete("/delete", status_code=200)
-async def delete_user(user_data: user.Delete, response: Response):
+async def delete_user(user_data: Dict[Any, Any], response: Response):
     db = DBConnection()
-    user = db.find_user_by_email(user_data.email)
+    user = db.find_user_by_email(user_data["email"])
 
     # Check if the user account does not exist
     if not user:
@@ -81,5 +75,6 @@ async def delete_user(user_data: user.Delete, response: Response):
         return {"error": "User account was not found!"}
 
     # Delete the account and return success.
-    db.delete_user(user_data.email)
+    db.delete_user(user_data["email"])
     return {"success": "Succesfully deleted the user account!"}
+

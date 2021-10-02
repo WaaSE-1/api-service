@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class User(BaseModel):
+class Register(BaseModel):
     firstname: str
     lastname: str
     email: str
@@ -20,3 +20,12 @@ class User(BaseModel):
             self.address,
             self.password,
         ]
+
+
+class Login(BaseModel):
+    email: str
+    password: str
+
+
+class Delete(BaseModel):
+    email: str
