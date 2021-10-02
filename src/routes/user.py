@@ -1,6 +1,7 @@
 import re
 from typing import Dict, Any
 from fastapi import APIRouter, Response, status, Depends
+from fastapi.security import oauth2
 from argon2 import PasswordHasher
 import json, datetime
 
@@ -8,6 +9,7 @@ import json, datetime
 from src.modules.mysql.db import DBConnection
 from src.modules.auth.core import Auth
 from src.schema import user
+from src.settings import Settings
 
 app = APIRouter()
 
@@ -61,17 +63,23 @@ async def login_user(user_data: user.Login, response: Response):
         return {"error": "Provided password is incorrect!"}
 
 
+
+
 # Endpoint for updating a user
 @app.put("/update" , status_code=200)
-async def update_user(user_data: user.Register, response: Response):
+async def update_user(user_data: user.Register, 
+                      token: str = Depends(Auth.validate_token)):
 
     db = DBConnection()
-    user = db.find_user_by_email(user_data.Email)
-    db.update_user(user_data)
+    user = db.find_user_by_email(user_data.email)
+    return "Success"
+    #db.update_user(user_data)
 
 
 @app.delete("/delete", status_code=200)
-async def delete_user(user_data: user.Delete, response: Response):
+async def delete_user(user_data: user.Delete, 
+                      response: Response,
+                      token: str = Depends(Auth.validate_token)):
     db = DBConnection()
     user = db.find_user_by_email(user_data.email)
 

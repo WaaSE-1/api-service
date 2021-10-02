@@ -5,15 +5,13 @@
 - global variables must be uppercase and seperated with underscore (_).
 
 ##  Functions 
-- functions shopuld be lowercase with words seperated by underscores.
+- functions should be lowercase with words seperated by underscores.
 - mixedCase is allowed only in contexts where that's already the prevailing style (e.g. threading.py), to retain backwards compatibility
 
 ## File structure
-- Keep packages and libraries seperated in the "modules" folder. 
+- keep packages and libraries seperated in the "modules" folder. 
+- no wildcard (*) imports for security and performance reasons.
+- use relative file paths for imports
 
 ## Comments
-- Comments on seperate lines and always 
-
-
-# SDsadasd
-def functioname():  # sdasda
+- comments on seperate lines in english only and one space followed by the comment 
