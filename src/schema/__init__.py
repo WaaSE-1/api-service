@@ -1,1 +1,1 @@
-from src.schema.user import User
+from src.schema import user

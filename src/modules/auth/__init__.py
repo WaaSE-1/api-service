@@ -1,1 +1,1 @@
-from src.modules.auth.auth import Auth
+from src.modules.auth.core import Auth

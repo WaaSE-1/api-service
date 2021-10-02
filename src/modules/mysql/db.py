@@ -45,6 +45,16 @@ class DBConnection:
         self.cursor.callproc("DeleteUser", [email])
         self.conn.commit()
 
+    def update_user(self, user):
+        """
+        update_user Updates a user account by their email address.
+
+        Args:
+            email (str): Email address that will be used to locate the user
+        """
+        self.cursor.callproc("UpdateUser", [user.firstname, user.lastname, user.email, user.phonenumber, user.loc_id, user.address, user.password])
+        self.conn.commit()
+
     def __del__(self):
         # Garbage collector goes brrr....
         self.cursor.close()

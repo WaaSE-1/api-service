@@ -25,3 +25,4 @@ class Settings:
             ),
             "port": 3306,
         }
+
