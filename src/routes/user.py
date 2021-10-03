@@ -70,16 +70,21 @@ async def login_user(user_data: user.Login, response: Response):
 async def update_user(user_data: user.Register, 
                       token: str = Depends(Auth.validate_token)):
 
+    new_user_data = user_data.dict()
+    #print(new_user_data)
     db = DBConnection()
-    user = db.find_user_by_email(user_data.email)
-    return "Success"
+    user = db.find_user_by_email(token["email"])
+    new_user_data["password"] = user["password"]
     #db.update_user(user_data)
+    return "Success"
+    
 
 
 @app.delete("/delete", status_code=200)
 async def delete_user(user_data: user.Delete, 
                       response: Response,
                       token: str = Depends(Auth.validate_token)):
+    print(user_data)
     db = DBConnection()
     user = db.find_user_by_email(user_data.email)
 
@@ -89,5 +94,6 @@ async def delete_user(user_data: user.Delete,
         return {"error": "User account was not found!"}
 
     # Delete the account and return success.
+
     db.delete_user(user_data.email)
     return {"success": "Succesfully deleted the user account!"}
