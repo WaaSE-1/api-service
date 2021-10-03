@@ -44,6 +44,41 @@ def test_login_password_incorrect():
     assert 'error' in response.json()
     assert response.status_code == 401
 
+def test_update_details_unauthorized():
+    user = {
+        "firstname": "TueNew",
+        "lastname": "HellsternNew",
+        "email": "testlogin@mail.com",
+        "phone_number": "21232222",
+        "location_id": 2400,
+        "address": "Gulddbergsgade 29N",
+        "password": "12s34Tecc1"
+    }
+    
+    response = client.put("/users/update", json=user)
+    assert response.status_code == 401
+
+def test_update_details_authorized():
+    user = {
+        "email": "testlogin@mail.com",
+        "password": "1234Tecc1"
+    }
+
+    response = client.post("/users/login", json=user)
+    token = response.json()['token']['access_token']
+
+    user = {
+        "firstname": "TueNew",
+        "lastname": "HellsternNew",
+        "email": "testlogin@mail.com",
+        "phone_number": "21232222",
+        "location_id": 2400,
+        "address": "Gulddbergsgade 29N",
+        "password": "12s34Tecc1"
+    }
+    
+    response = client.put("/users/update", json=user, headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == 200
 
 def test_user_delete_unauthorized():
     user = {
