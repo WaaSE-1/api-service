@@ -71,12 +71,11 @@ async def update_user(user_data: user.Register,
                       token: str = Depends(Auth.validate_token)):
 
     new_user_data = user_data.dict()
-    #print(new_user_data)
     db = DBConnection()
     user = db.find_user_by_email(token["email"])
     new_user_data["password"] = user["password"]
-    #db.update_user(user_data)
-    return "Success"
+    db.update_user(token["email"], new_user_data)
+    return {"success": "User account has been created successfully!", "token": Auth.create_token(new_user_data)}
     
 
 

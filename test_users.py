@@ -4,15 +4,13 @@ from main import app
 
 client = TestClient(app)
 
-token: str
-
 def test_register_success():
     user = {
         "firstname": "Tue",
         "lastname": "Hellstern",
         "email": "testlogin@mail.com",
-        "phonenumber": "2123222",
-        "loc_id": 2200,
+        "phone_number": "2123222",
+        "location_id": 2200,
         "address": "Guldbergsgade 29N",
         "password": "1234Tecc1"
     }
@@ -50,10 +48,8 @@ def test_login_password_incorrect():
 def test_user_delete_unauthorized():
     user = {
         "email": "testlogin@mail.com",
-        "password": "1"
     }   
     response = client.delete("/users/delete", json=user)
-    #token = response.json()['token']['access_token']
     assert response.status_code == 401
 
 def test_user_delete_authorized():

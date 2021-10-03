@@ -5,8 +5,8 @@ class Register(BaseModel):
     firstname: str
     lastname: str
     email: str
-    phonenumber: str
-    loc_id: int
+    phone_number: str
+    location_id: int
     address: str
     password: str
 
@@ -15,8 +15,8 @@ class Register(BaseModel):
             self.firstname,
             self.lastname,
             self.email,
-            self.phonenumber,
-            self.loc_id,
+            self.phone_number,
+            self.location_id,
             self.address,
             self.password,
         ]
