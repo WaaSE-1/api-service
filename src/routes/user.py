@@ -75,7 +75,7 @@ async def update_user(user_data: user.Register,
     user = db.find_user_by_email(token["email"])
     new_user_data["password"] = user["password"]
     db.update_user(token["email"], new_user_data)
-    return {"success": "User account has been created successfully!", "token": Auth.create_token(new_user_data)}
+    return {"success": "User account has been updated successfully!", "token": Auth.create_token(new_user_data)}
     
 
 

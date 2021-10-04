@@ -10,7 +10,7 @@ def test_register_success():
         "lastname": "Hellstern",
         "email": "testlogin@mail.com",
         "phone_number": "2123222",
-        "location_id": 2200,
+        "postcode": 2200,
         "address": "Guldbergsgade 29N",
         "password": "1234Tecc1"
     }
@@ -50,7 +50,7 @@ def test_update_details_unauthorized():
         "lastname": "HellsternNew",
         "email": "testlogin@mail.com",
         "phone_number": "21232222",
-        "location_id": 2400,
+        "postcode": 2400,
         "address": "Gulddbergsgade 29N",
         "password": "12s34Tecc1"
     }
@@ -72,7 +72,7 @@ def test_update_details_authorized():
         "lastname": "HellsternNew",
         "email": "testlogin@mail.com",
         "phone_number": "21232222",
-        "location_id": 2400,
+        "postcode": 2400,
         "address": "Gulddbergsgade 29N",
         "password": "12s34Tecc1"
     }
