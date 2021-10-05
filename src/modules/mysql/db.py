@@ -55,6 +55,19 @@ class DBConnection:
         self.cursor.callproc("UpdateCustomerDetails", [email, user["firstname"], user["lastname"], user["email"], user["phone_number"], user["address"], user["password"]])
         self.conn.commit()
 
+    def valid_zip_code(self, zip):
+        """
+        valid_zip_code Updates a user account by their email address.
+
+        Args:
+            zip (int): Post code that user has provided
+
+        Returns:
+            bool: Post code exists in the database
+        """
+        self.cursor.callproc("ValidZIP", [zip])
+        return [i.fetchone() for i in self.cursor.stored_results()][0] != None
+
     def __del__(self):
         # Garbage collector goes brrr....
         self.cursor.close()

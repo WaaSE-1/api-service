@@ -19,10 +19,9 @@ app = APIRouter()
 @app.post("/register", status_code=201)
 async def register_user(user: user.Register, response: Response):
 
-    # Check if the password matches the criteria
-    if not re.match(r"[A-Za-z0-9@#$%^&+=]{8,32}", user.password):
-        response.status_code = status.HTTP_400_BAD_REQUEST
-        return {"error": "Password does not meet the set criteria!"}
+    # Check if the email address is valid
+    if not re.search('^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$', user.email):
+        return {"error": "Email address is not valid!"}
 
     db = DBConnection()
     # Check if the user account already exists
@@ -30,6 +29,14 @@ async def register_user(user: user.Register, response: Response):
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"error": "User with this email address already exists!"}
 
+    if not db.valid_zip_code(user.postcode):
+        return {"error": "Provided post code is incorrect!"}
+
+    # Check if the password matches the criteria
+    if not re.match(r"[A-Za-z0-9@#$%^&+=]{8,32}", user.password):
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"error": "Password does not meet the set criteria!"}
+   
     # Store the hashed password in the User object.
     user.password = PasswordHasher().hash(user.password)
     db.create_user(user)
