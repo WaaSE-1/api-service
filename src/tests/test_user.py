@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
-
-from main import app
+import fastapi
+import pytest
+from src.routes.user import app
 
 client = TestClient(app)
 
@@ -14,7 +15,7 @@ def test_register_success():
         "address": "Guldbergsgade 29N",
         "password": "1234Tecc1"
     }
-    response = client.post("/users/register", json=user)
+    response = client.post("/register", json=user)
     assert response.status_code == 201
 
 def test_login_success():
@@ -22,7 +23,7 @@ def test_login_success():
         "email": "testlogin@mail.com",
         "password": "1234Tecc1"
     }   
-    response = client.post("/users/login", json=user)
+    response = client.post("/login", json=user)
     assert 'success' in response.json()
     assert response.status_code == 200
     
@@ -31,7 +32,7 @@ def test_login_user_not_found():
         "email": "testlogindoesnotexist@mail.com",
         "password": "12"
     }   
-    response = client.post("/users/login", json=user)
+    response = client.post("/login", json=user)
     assert 'error' in response.json()
     assert response.status_code == 404
 
@@ -40,7 +41,7 @@ def test_login_password_incorrect():
         "email": "testlogin@mail.com",
         "password": "1"
     }   
-    response = client.post("/users/login", json=user)
+    response = client.post("/login", json=user)
     assert 'error' in response.json()
     assert response.status_code == 401
 
@@ -54,9 +55,11 @@ def test_update_details_unauthorized():
         "address": "Gulddbergsgade 29N",
         "password": "12s34Tecc1"
     }
+    with pytest.raises(fastapi.exceptions.HTTPException) as e:
+        client.put("/update", json=user)
+
+    assert 'Not authenticated' in str(e)
     
-    response = client.put("/users/update", json=user)
-    assert response.status_code == 401
 
 def test_update_details_authorized():
     user = {
@@ -64,7 +67,7 @@ def test_update_details_authorized():
         "password": "1234Tecc1"
     }
 
-    response = client.post("/users/login", json=user)
+    response = client.post("/login", json=user)
     token = response.json()['token']['access_token']
 
     user = {
@@ -77,25 +80,30 @@ def test_update_details_authorized():
         "password": "12s34Tecc1"
     }
     
-    response = client.put("/users/update", json=user, headers={"Authorization": f"Bearer {token}"})
+    response = client.put("/update", json=user, headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 200
 
 def test_user_delete_unauthorized():
     user = {
         "email": "testlogin@mail.com",
     }   
-    response = client.delete("/users/delete", json=user)
-    assert response.status_code == 401
+
+    
+    with pytest.raises(fastapi.exceptions.HTTPException) as e:
+        client.delete("/delete", json=user)
+
+    assert 'Not authenticated' in str(e)
+    
 
 def test_user_delete_authorized():
     user = {
         "email": "testlogin@mail.com",
         "password": "1234Tecc1"
     }   
-    response = client.post("/users/login", json=user)
+    response = client.post("/login", json=user)
     token = response.json()['token']['access_token']
     user = {
         "email": "testlogin@mail.com"
     }
-    response = client.delete("/users/delete", json=user, headers={"Authorization": f"Bearer {token}"})
+    response = client.delete("/delete", json=user, headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 200
