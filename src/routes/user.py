@@ -1,7 +1,5 @@
 import re
-from typing import Dict, Any
 from fastapi import APIRouter, Response, status, Depends
-from fastapi.security import oauth2
 from argon2 import PasswordHasher
 import json, datetime
 
@@ -9,7 +7,6 @@ import json, datetime
 from src.modules.mysql.db import DBConnection
 from src.modules.auth.core import Auth
 from src.schema import user
-from src.settings import Settings
 
 app = APIRouter()
 

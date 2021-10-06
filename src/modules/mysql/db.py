@@ -68,6 +68,17 @@ class DBConnection:
         self.cursor.callproc("ValidZIP", [zip])
         return [i.fetchone() for i in self.cursor.stored_results()][0] != None
 
+    def get_all_cars(self):
+        """
+        get_all_cars Returns a list of cars available for purchase
+
+        Returns:
+            list [dict]: List of car objects
+        """
+        self.cursor.callproc("ListAvailableCars", [])
+        return [i.fetchone() for i in self.cursor.stored_results()]
+        
+
     def __del__(self):
         # Garbage collector goes brrr....
         self.cursor.close()
