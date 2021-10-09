@@ -76,7 +76,7 @@ class DBConnection:
             list [dict]: List of car objects
         """
         self.cursor.callproc("ListAvailableCars", [])
-        return [i.fetchone() for i in self.cursor.stored_results()]
+        return [i.fetchall() for i in self.cursor.stored_results()]
         
 
     def __del__(self):
