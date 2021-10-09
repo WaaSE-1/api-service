@@ -102,6 +102,17 @@ class DBConnection:
         self.cursor.callproc("CreateNewCarPart", [product["manufacturer"], product["weight"], product["dimensions"], product["material"], product["barcode"], product["serial_number"], product["price"]])
         self.conn.commit()
 
+    def get_all_products(self):
+        """
+        Find all of the products available for sale
+
+        Returns:
+            products: list of products available for sale.
+
+        """
+        self.cursor.callproc("ListAvailableParts", [])
+        return [i.fetchall() for i in self.cursor.stored_results()][0]
+
     def __del__(self):
         # Garbage collector goes brrr....
         self.cursor.close()
