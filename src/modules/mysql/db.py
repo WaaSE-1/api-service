@@ -78,6 +78,17 @@ class DBConnection:
         self.cursor.callproc("ListAvailableCars", [])
         return [i.fetchall() for i in self.cursor.stored_results()]
         
+    def create_new_car(self, car): 
+        """
+        Create a new car with a single object with car details 
+        Details are manufacturer, model, year, brand, dealership, the quantity availble and price.
+
+        Args: 
+            car(dict): car object existing of manufacturer, model, year and price
+
+        """
+        self.cursor.callproc("CreateNewCar", [car["manufacturer"], car["model"], car["year"], car["price"]])
+        self.conn.commit()
 
     def __del__(self):
         # Garbage collector goes brrr....

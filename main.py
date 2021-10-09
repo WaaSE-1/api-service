@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from src.routes import user, cars
+from src.routes import user, car
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -14,4 +14,4 @@ app.add_middleware(
 )
 
 app.include_router(user.app, prefix="/users")
-app.include_router(cars.app, prefix="/cars")
+app.include_router(car.app, prefix="/cars")
