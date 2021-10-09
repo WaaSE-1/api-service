@@ -1,11 +1,18 @@
-from fastapi.testclient import TestClient
 import fastapi
 import pytest
+from fastapi.testclient import TestClient
+
+from src import DBConnection
 from src.routes.user import app
 
 client = TestClient(app)
 
 def test_register_success():
+    # Ensure that someone has not fucked up something and made an email that we use for tests
+    db = DBConnection()
+    db.cursor.execute('DELETE from customer where email="testlogin@mail.com";')
+    db.conn.commit()
+    del db
     user = {
         "firstname": "Tue",
         "lastname": "Hellstern",
