@@ -11,7 +11,6 @@ async def register_user(car_id):
     db = DBConnection()
     return db.get_car_by_id(car_id)
 
-
 # GET request to list all cars
 @app.get("/", status_code=200)
 async def register_user():

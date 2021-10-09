@@ -90,10 +90,13 @@ class DBConnection:
         self.cursor.callproc("CreateNewCar", [car["manufacturer"], car["model"], car["year"], car["price"]])
         self.conn.commit()
 
-
     def get_car_by_id(self, id):
         self.cursor.callproc("GetCarDetails", [id])
         return [i.fetchone() for i in self.cursor.stored_results()][0]
+
+    def update_vehicle_inventory(self, inventory):
+        self.cursor.callproc("UpdateVehicleInventory", [inventory["vehicle"], inventory["dealership"], inventory["inventory"]])
+        self.conn.commit()
 
     def __del__(self):
         # Garbage collector goes brrr....
