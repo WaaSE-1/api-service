@@ -161,6 +161,15 @@ class DBConnection:
         )
         self.conn.commit()
 
+    def delete_product(self, product):
+        """
+        Delete a product from the inventory
+        """
+        self.cursor.callproc(
+            "DeleteCarPartInventory", [product["part"], product["dealership"]]
+        )
+        self.conn.commit()
+
     def __del__(self):
         # Garbage collector goes brrr....
         self.cursor.close()

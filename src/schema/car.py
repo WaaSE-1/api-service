@@ -9,5 +9,5 @@ class Car(BaseModel):
 
 
 class Delete(BaseModel):
-    vehicle: str
+    vehicle: int
     dealership: str

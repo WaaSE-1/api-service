@@ -9,3 +9,8 @@ class Product(BaseModel):
     barcode: str
     serial_number: str
     price: float
+
+
+class Delete(BaseModel):
+    part: int
+    dealership: str

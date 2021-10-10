@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class Inventory(BaseModel):
-    vehicle: str
+    vehicle: int
     dealership: str
     inventory: int
 

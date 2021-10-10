@@ -17,4 +17,11 @@ async def create_a_product(product: product.Product):
     return db.create_new_product(product.dict())
 
 
+# Delete a product
+@app.delete("/", status_code=200)
+async def delete_product(product: product.Delete):
+    db = DBConnection()
+    return db.delete_product(product.dict())
+
+
 # TODO Assign a product to a dealership
