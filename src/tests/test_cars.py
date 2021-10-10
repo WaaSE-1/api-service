@@ -29,3 +29,7 @@ def test_car_add_new():
             "year": 2100,
             "price": 1242,
         }
+    db.cursor.execute(
+        'DELETE from vehicle WHERE id = (select * from (select id from vehicle vh where model = "TestModelOnly")tbltemp)'
+    )
+    db.conn.commit()
