@@ -115,6 +115,13 @@ class DBConnection:
         )
         self.conn.commit()
 
+    def update_car_part_inventory(self, carpart):
+        self.cursor.callproc(
+            "UpdateCarPartInventory",
+            [carpart["car_part_id"], carpart["dealership"], carpart["inventory"]],
+        )
+        self.conn.commit()
+
     def create_new_product(self, product):
         self.cursor.callproc(
             "CreateNewCarPart",
