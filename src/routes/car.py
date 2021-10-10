@@ -24,3 +24,10 @@ async def register_user():
 async def create_car(car: car.Car):
     db = DBConnection()
     return db.create_new_car(car.dict())
+
+
+# Remove a car
+@app.delete("/", status_code=200)
+async def remove_car(car: car.Delete):
+    db = DBConnection()
+    return db.remove_car(car.dict())

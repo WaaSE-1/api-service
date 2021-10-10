@@ -52,7 +52,18 @@ class DBConnection:
         Args:
             email (str): Email address that will be used to locate the user
         """
-        self.cursor.callproc("UpdateCustomerDetails", [email, user["firstname"], user["lastname"], user["email"], user["phone_number"], user["address"], user["password"]])
+        self.cursor.callproc(
+            "UpdateCustomerDetails",
+            [
+                email,
+                user["firstname"],
+                user["lastname"],
+                user["email"],
+                user["phone_number"],
+                user["address"],
+                user["password"],
+            ],
+        )
         self.conn.commit()
 
     def valid_zip_code(self, zip):
@@ -77,17 +88,20 @@ class DBConnection:
         """
         self.cursor.callproc("ListAvailableCars", [])
         return [i.fetchall() for i in self.cursor.stored_results()]
-        
-    def create_new_car(self, car): 
+
+    def create_new_car(self, car):
         """
-        Create a new car with a single object with car details 
+        Create a new car with a single object with car details
         Details are manufacturer, model, year, brand, dealership, the quantity availble and price.
 
-        Args: 
+        Args:
             car(dict): car object existing of manufacturer, model, year and price
 
         """
-        self.cursor.callproc("CreateNewCar", [car["manufacturer"], car["model"], car["year"], car["price"]])
+        self.cursor.callproc(
+            "CreateNewCar",
+            [car["manufacturer"], car["model"], car["year"], car["price"]],
+        )
         self.conn.commit()
 
     def get_car_by_id(self, id):
@@ -95,11 +109,25 @@ class DBConnection:
         return [i.fetchone() for i in self.cursor.stored_results()][0]
 
     def update_vehicle_inventory(self, inventory):
-        self.cursor.callproc("UpdateVehicleInventory", [inventory["vehicle"], inventory["dealership"], inventory["inventory"]])
+        self.cursor.callproc(
+            "UpdateVehicleInventory",
+            [inventory["vehicle"], inventory["dealership"], inventory["inventory"]],
+        )
         self.conn.commit()
 
     def create_new_product(self, product):
-        self.cursor.callproc("CreateNewCarPart", [product["manufacturer"], product["weight"], product["dimensions"], product["material"], product["barcode"], product["serial_number"], product["price"]])
+        self.cursor.callproc(
+            "CreateNewCarPart",
+            [
+                product["manufacturer"],
+                product["weight"],
+                product["dimensions"],
+                product["material"],
+                product["barcode"],
+                product["serial_number"],
+                product["price"],
+            ],
+        )
         self.conn.commit()
 
     def get_all_products(self):
@@ -113,9 +141,20 @@ class DBConnection:
         self.cursor.callproc("ListAvailableParts", [])
         return [i.fetchall() for i in self.cursor.stored_results()][0]
 
+    def remove_car(self, car):
+        """
+        Remove a specific car from inventory
+
+        Returns:
+            car: car details.
+
+        """
+        self.cursor.callproc(
+            "DeleteVehicleInventory", [car["vehicle"], car["dealership"]]
+        )
+        self.conn.commit()
+
     def __del__(self):
         # Garbage collector goes brrr....
         self.cursor.close()
         self.conn.close()
-
-

@@ -6,4 +6,8 @@ class Car(BaseModel):
     model: str
     year: int
     price: float
-    
+
+
+class Delete(BaseModel):
+    vehicle: str
+    dealership: str
