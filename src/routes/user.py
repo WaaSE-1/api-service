@@ -11,13 +11,12 @@ from src.schema import user
 app = APIRouter()
 
 
-
 # Request to register a user
 @app.post("/register", status_code=201)
 async def register_user(user: user.Register, response: Response):
 
     # Check if the email address is valid
-    if not re.search('^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$', user.email):
+    if not re.search("^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$", user.email):
         return {"error": "Email address is not valid!"}
 
     db = DBConnection()
@@ -33,7 +32,7 @@ async def register_user(user: user.Register, response: Response):
     if not re.match(r"[A-Za-z0-9@#$%^&+=]{8,32}", user.password):
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"error": "Password does not meet the set criteria!"}
-   
+
     # Store the hashed password in the User object.
     user.password = PasswordHasher().hash(user.password)
     db.create_user(user)
@@ -45,7 +44,6 @@ async def register_user(user: user.Register, response: Response):
 async def login_user(user_data: user.Login, response: Response):
     db = DBConnection()
     user = db.find_user_by_email(user_data.email)
-
 
     # Check if the user account does not exist.
     if not user:
@@ -67,26 +65,29 @@ async def login_user(user_data: user.Login, response: Response):
         return {"error": "Provided password is incorrect!"}
 
 
-
-
 # Endpoint for updating a user
-@app.put("/update" , status_code=200)
-async def update_user(user_data: user.Register, 
-                      token: str = Depends(Auth.validate_token)):
+@app.put("/", status_code=200)
+async def update_user(
+    user_data: user.Register, token: str = Depends(Auth.validate_token)
+):
 
     new_user_data = user_data.dict()
     db = DBConnection()
     user = db.find_user_by_email(token["email"])
     new_user_data["password"] = user["password"]
     db.update_user(token["email"], new_user_data)
-    return {"success": "User account has been updated successfully!", "token": Auth.create_token(new_user_data)}
-    
+    return {
+        "success": "User account has been updated successfully!",
+        "token": Auth.create_token(new_user_data),
+    }
 
 
-@app.delete("/delete", status_code=200)
-async def delete_user(user_data: user.Delete, 
-                      response: Response,
-                      token: str = Depends(Auth.validate_token)):
+@app.delete("/", status_code=200)
+async def delete_user(
+    user_data: user.Delete,
+    response: Response,
+    token: str = Depends(Auth.validate_token),
+):
     print(user_data)
     db = DBConnection()
     user = db.find_user_by_email(user_data.email)
