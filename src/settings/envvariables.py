@@ -7,9 +7,17 @@ class Settings:
     # Load environment envirables
     load_dotenv()
 
+    # Ensure that all of the environmental variables are set.
+    def check_variables(self) -> None:
+        missing = [key for key, value in self.db_details().items() if value == None]
+        if not self.JWT_SECRET:
+            missing.append("JWT_SECRET")
+        if missing:
+            raise EnvironmentVariableException(missing)
+
     # Get current directory
     CURRENT_DIR = str(Path(os.getcwd()))
-    
+
     # JWT Secret required for authentication
     JWT_SECRET = os.getenv("JWT_SECRET")
 
@@ -29,3 +37,11 @@ class Settings:
 
     # OTHERS
     envvar = 0
+
+
+class EnvironmentVariableException(Exception):
+    def __init__(self, missing):
+        self.missing = missing
+
+    def __str__(self):
+        return "Missing environmental variables:" + ", ".join(self.missing)
