@@ -137,7 +137,16 @@ class DBConnection:
         )
         self.conn.commit()
 
+
+
     def create_service_request(self, service):
+        """
+        Find all of the products available for sale
+
+        Args:
+            Service: Details of service request.
+
+        """
         self.cursor.callproc(
             "CreateServiceRequest",
             [
