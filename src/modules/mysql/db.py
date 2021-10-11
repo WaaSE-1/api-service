@@ -137,6 +137,18 @@ class DBConnection:
         )
         self.conn.commit()
 
+    def create_service_request(self, service):
+        self.cursor.callproc(
+            "CreateServiceRequest",
+            [
+                service["VIN"],
+                service["service"],
+                service["mechanic"],
+                service["date"],     
+            ],
+        )
+        self.conn.commit()
+
     def get_all_products(self):
         """
         Find all of the products available for sale
