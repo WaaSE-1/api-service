@@ -16,7 +16,7 @@ app = APIRouter()
 async def register_user(user: user.Register, response: Response):
 
     # Check if the email address is valid
-    if not re.search("^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$", user.email):
+    if not re.search(r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$", user.email):
         return {"error": "Email address is not valid!"}
 
     db = DBConnection()
@@ -68,17 +68,38 @@ async def login_user(user_data: user.Login, response: Response):
 # Endpoint for updating a user
 @app.put("/", status_code=200)
 async def update_user(
-    user_data: user.Register, token: str = Depends(Auth.validate_token)
+    user_data: user.Register,
+    response: Response,
+    token: str = Depends(Auth.validate_token),
 ):
 
-    new_user_data = user_data.dict()
+    new_user = user_data.dict()
+
+    if not re.search(r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$", new_user["email"]):
+        return {"error": "Email address is not valid!"}
+
     db = DBConnection()
+
     user = db.find_user_by_email(token["email"])
-    new_user_data["password"] = user["password"]
-    db.update_user(token["email"], new_user_data)
+
+    # Check if the user account already exists
+    if db.find_user_by_email(new_user["email"]) and new_user["email"] != user["email"]:
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"error": "User with this email address already exists!"}
+
+    if not db.valid_zip_code(new_user["postcode"]):
+        return {"error": "Provided post code is incorrect!"}
+
+    # Check if the password matches the criteria
+    if not re.match(r"[A-Za-z0-9@#$%^&+=]{8,32}", new_user["password"]):
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return {"error": "Password does not meet the set criteria!"}
+
+    new_user["password"] = user["password"]
+    db.update_user(token["email"], new_user)
     return {
         "success": "User account has been updated successfully!",
-        "token": Auth.create_token(new_user_data),
+        "token": Auth.create_token(new_user),
     }
 
 
