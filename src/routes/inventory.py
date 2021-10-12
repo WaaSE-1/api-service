@@ -10,7 +10,6 @@ async def update_inventory(inventory: inventory.Inventory):
     db = DBConnection()
     return db.update_vehicle_inventory(inventory.dict())
 
-
 # Post request to add car part to the stock
 @app.post("/carpart", status_code=200)
 async def update_car_part_inventory(inventory: inventory.CarPartInventory):

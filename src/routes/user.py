@@ -10,7 +10,6 @@ from src.schema import user
 
 app = APIRouter()
 
-
 # Request to register a user
 @app.post("/register", status_code=201)
 async def register_user(user: user.Register, response: Response):

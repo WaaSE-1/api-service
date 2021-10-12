@@ -2,7 +2,6 @@ from fastapi import APIRouter
 from src.modules.mysql.db import DBConnection
 from src.schema import car
 
-
 app = APIRouter()
 
 # Get request for specific car

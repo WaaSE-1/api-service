@@ -1,7 +1,6 @@
 from mysql.connector import connect
 from src.settings.envvariables import Settings
 
-
 class DBConnection:
     def __init__(self):
         self.conn = connect(**Settings().db_details())

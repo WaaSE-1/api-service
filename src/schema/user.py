@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 
-
 class Register(BaseModel):
     firstname: str
     lastname: str

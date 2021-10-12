@@ -15,6 +15,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Include/define our routes
 app.include_router(user.app, prefix="/users")
 app.include_router(car.app, prefix="/cars")
 app.include_router(inventory.app, prefix="/inventory")
