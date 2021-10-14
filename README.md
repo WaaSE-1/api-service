@@ -12,7 +12,7 @@ Back-end API service for the car delaership platform developed for a educational
 - Țurcan Corina
 
 #### Coding Standards
-We've created our own coding-standards.md
+We've created our own coding-standard.md
 
 ## Requirements
 - Docker installed
