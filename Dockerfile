@@ -15,7 +15,7 @@ ENV JWT_SECRET={JWT_SECRET}
 RUN pip install --upgrade pip && \
 pip install -r ./requirements.txt
 
-RUN python3 pytest
+RUN pytest
 
 EXPOSE 80
 
