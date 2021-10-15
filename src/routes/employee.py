@@ -93,12 +93,7 @@ async def login_employee(employee_data: employee.Login, response: Response):
 
 
 @app.delete("/", status_code=200)
-async def delete_employee(
-    employee_data: employee.Delete,
-    response: Response,
-    token: str = Depends(Auth.validate_token),
-):
-    print(employee_data)
+async def delete_employee(employee_data: employee.Delete, response: Response):
     db = DBConnection()
     employee = db.find_employee_by_email(employee_data.email)
 
