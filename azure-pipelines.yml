@@ -18,7 +18,12 @@ stages:
         env:
           PIPELINE_DOCKER_USER: $(PIPELINE_DOCKER_USER)
           PIPELINE_DOCKER_PASSWORD: $(PIPELINE_DOCKER_PASSWORD)
-          
+
+      - task: PythonScript@0
+        inputs:
+          scriptSource: 'inline'
+          script: 'pytest'  
+
       - task: replacetokens@3
         inputs:
           targetFiles: '**/*Dockerfile'
