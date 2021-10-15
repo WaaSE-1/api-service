@@ -36,7 +36,25 @@ docker run -h 0.0.0.0 -p 8000:80 waasegroup/api-service:latest
 
 3. Go to the FastAPI docs: http://localhost:8000/docs
 
+### Python
+1. Clone the repository
+```
+git clone https://github.com/WaaSE-1/api-service.git
+```
 
+2. Go into the directory of the repository you just cloned
+```
+cd ./api-service
+```
+
+3. Install packages from requirmements.txt
+```
+pip install -r requirements.txt
+```
+4. Run the app depending on your python interpreter
+```
+python3 ./main.py
+```
 ## Useful links
 
 #### Production
