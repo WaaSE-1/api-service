@@ -19,12 +19,6 @@ stages:
           PIPELINE_DOCKER_USER: $(PIPELINE_DOCKER_USER)
           PIPELINE_DOCKER_PASSWORD: $(PIPELINE_DOCKER_PASSWORD)
 
-      - task: PythonScript@0
-        displayName: Pytest
-        inputs:
-          scriptSource: 'inline'
-          script: 'pytest'  
-
       - task: replacetokens@3
         displayName: Replace tokens
         inputs:
