@@ -20,14 +20,14 @@ def test_register_success():
         "phone_number": "2123222",
         "postcode": 2200,
         "address": "Guldbergsgade 29N",
-        "password": "1234Tecc1",
+        "password": "1234Tecc1#C",
     }
     response = client.post("/register", json=user)
     assert response.status_code == 201
 
 
 def test_login_success():
-    user = {"email": "testlogin@mail.com", "password": "1234Tecc1"}
+    user = {"email": "testlogin@mail.com", "password": "1234Tecc1#C"}
     response = client.post("/login", json=user)
     assert "success" in response.json()
     assert response.status_code == 200
@@ -55,7 +55,7 @@ def test_update_details_unauthorized():
         "phone_number": "21232222",
         "postcode": 2400,
         "address": "Gulddbergsgade 29N",
-        "password": "12s34Tecc1",
+        "password": "1234Tecc1#C",
     }
     with pytest.raises(fastapi.exceptions.HTTPException) as e:
         client.put("/", json=user)
@@ -64,7 +64,7 @@ def test_update_details_unauthorized():
 
 
 def test_update_details_authorized():
-    user = {"email": "testlogin@mail.com", "password": "1234Tecc1"}
+    user = {"email": "testlogin@mail.com", "password": "1234Tecc1#C"}
 
     response = client.post("/login", json=user)
     token = response.json()["token"]["access_token"]
@@ -76,11 +76,11 @@ def test_update_details_authorized():
         "phone_number": "21232222",
         "postcode": 2400,
         "address": "Gulddbergsgade 29N",
-        "password": "12s34Tecc1",
+        "password": "1234Tecc1#C",
     }
 
     response = client.put("/", json=user, headers={"Authorization": f"Bearer {token}"})
-    assert response.status_code == 200
+    assert "success" in response.json()
 
 
 def test_user_delete_unauthorized():
@@ -95,7 +95,7 @@ def test_user_delete_unauthorized():
 
 
 def test_user_delete_authorized():
-    user = {"email": "testlogin@mail.com", "password": "1234Tecc1"}
+    user = {"email": "testlogin@mail.com", "password": "1234Tecc1#C"}
     response = client.post("/login", json=user)
     token = response.json()["token"]["access_token"]
     user = {"email": "testlogin@mail.com"}

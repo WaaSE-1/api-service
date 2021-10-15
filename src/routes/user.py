@@ -28,10 +28,14 @@ async def register_user(user: user.Register, response: Response):
         return {"error": "Provided post code is incorrect!"}
 
     # Check if the password matches the criteria
-    criteria = re.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,20}$")
+    criteria = re.compile(
+        r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,20}$"
+    )
     if not re.search(criteria, user.password):
         response.status_code = status.HTTP_400_BAD_REQUEST
-        return {"error": "Password does not meet the set criteria!\nIt has to contain: 1 uppercase, 1 lowercase, 1 special symbol, 6-20 chars long."}
+        return {
+            "error": "Password does not meet the set criteria!\nIt has to contain: 1 uppercase, 1 lowercase, 1 special symbol, 6-20 chars long."
+        }
 
     # Store the hashed password in the User object.
     user.password = PasswordHasher().hash(user.password)
@@ -91,10 +95,14 @@ async def update_user(
         return {"error": "Provided post code is incorrect!"}
 
     # Check if the password matches the criteria
-    criteria = re.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,20}$")
-    if not re.search(criteria, user.password):
+    criteria = re.compile(
+        r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,20}$"
+    )
+    if not re.search(criteria, new_user["password"]):
         response.status_code = status.HTTP_400_BAD_REQUEST
-        return {"error": "Password does not meet the set criteria!\nIt has to contain: 1 uppercase, 1 lowercase, 1 special symbol, 6-20 chars long."}
+        return {
+            "error": "Password does not meet the set criteria!\nIt has to contain: 1 uppercase, 1 lowercase, 1 special symbol, 8-20 chars long."
+        }
 
     new_user["password"] = user["password"]
     db.update_user(token["email"], new_user)

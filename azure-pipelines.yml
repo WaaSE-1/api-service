@@ -18,8 +18,9 @@ stages:
         env:
           PIPELINE_DOCKER_USER: $(PIPELINE_DOCKER_USER)
           PIPELINE_DOCKER_PASSWORD: $(PIPELINE_DOCKER_PASSWORD)
-          
+
       - task: replacetokens@3
+        displayName: Replace tokens
         inputs:
           targetFiles: '**/*Dockerfile'
           encoding: 'auto'
@@ -33,7 +34,7 @@ stages:
           enableTelemetry: true
 
       - task: Docker@2
-        displayName: Build docker image
+        displayName: Build
         inputs:
           repository: $(PIPELINE_DOCKER_REPOSITORY)
           command: build
@@ -41,7 +42,7 @@ stages:
           tags: latest
 
       - task: Docker@2
-        displayName: Docker Push
+        displayName: Push
         inputs:
           command: push
           repository: $(PIPELINE_DOCKER_REPOSITORY)

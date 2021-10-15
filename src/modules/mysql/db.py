@@ -190,6 +190,10 @@ class DBConnection:
         )
         self.conn.commit()
 
+    def get_all_services(self):
+        self.cursor.callproc("ListAvailableServices", [])
+        return [i.fetchall() for i in self.cursor.stored_results()][0]
+
     def create_employee(self, employee):
         """
         create_employee Saves the created employee to the database
