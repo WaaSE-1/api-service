@@ -64,9 +64,8 @@ async def register_employee(employee: employee.Register, response: Response):
 
     # Store the hashed password in the employee object.
     employee.password = PasswordHasher().hash(employee.password)
-    db.create_employee(employee)
 
-    return Auth.create_token(employee.dict())
+    return db.create_employee(employee)
 
 
 # Endpoint for login
