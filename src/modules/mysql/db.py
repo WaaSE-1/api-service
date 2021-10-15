@@ -206,7 +206,7 @@ class DBConnection:
         """
         self.cursor.callproc("CreateNewEmployee", employee.get_values())
         self.conn.commit()
-        return self.find_employee_by_email(employee.email)
+        return {"success": "Created a new employee!"}
 
     def valid_dealership_id(self, dealership):
         """
