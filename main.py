@@ -25,7 +25,7 @@ app.include_router(product.app, prefix="/products")
 app.include_router(service.app, prefix="/services/requests")
 
 # Launch the app with uvicorn and handle environment
-if Vars().ENV == 'prod':
+if Settings().ENV == 'prod':
     if __name__ == '__main__':
         print('Launching Production Environment')
         uvicorn.run('main:app', host='0.0.0.0', port=80, reload=False, workers=3)
