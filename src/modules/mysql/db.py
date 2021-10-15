@@ -1,7 +1,6 @@
 from mysql.connector import connect
 from src.settings.envvariables import Settings
 
-
 class DBConnection:
     def __init__(self):
         self.conn = connect(**Settings().db_details())
@@ -24,7 +23,7 @@ class DBConnection:
 
     def find_user_by_email(self, email: str):
         """
-        find_user Finds a user account by their email address.
+        find_user_by_email Finds a user account by their email address.
 
         Args:
             email (str): Email address that will be used to look up the user
@@ -137,6 +136,8 @@ class DBConnection:
         )
         self.conn.commit()
 
+
+
     def create_service_request(self, service):
         """
         Find all of the products available for sale
@@ -151,7 +152,7 @@ class DBConnection:
                 service["VIN"],
                 service["service"],
                 service["mechanic"],
-                service["date"],
+                service["date"],     
             ],
         )
         self.conn.commit()
@@ -193,7 +194,73 @@ class DBConnection:
         self.cursor.callproc("ListAvailableServices", [])
         return [i.fetchall() for i in self.cursor.stored_results()][0]
 
+    def create_employee(self, employee):
+        """
+        create_employee Saves the created employee to the database
+
+        Args:
+            employee (Employee): Data for the employee account that was created before.
+
+        Returns:
+            tuple: Created employee account
+        """
+        self.cursor.callproc("CreateNewEmployee", employee.get_values())
+        self.conn.commit()
+
+    def valid_dealership_id(self, dealership):
+        """
+        valid_dealership_id Updates a user account by their email address.
+
+        Args:
+            dealership (int): Dealership that user has provided
+
+        Returns:
+            bool: Dealership exists in the database
+        """
+        self.cursor.callproc("ValidDealership", [dealership])
+        return [i.fetchone() for i in self.cursor.stored_results()][0] != None
+    
+    def valid_department_id(self, department):
+        """
+        valid_department_id Updates a user account by their email address.
+
+        Args:
+            department (int): Department that user has provided
+
+        Returns:
+            bool: Department exists in the database
+        """
+        self.cursor.callproc("ValidDepartment", [department])
+        return [i.fetchone() for i in self.cursor.stored_results()][0] != None
+    
+    def valid_position_id(self, position):
+        """
+        valid_position_id Updates a user account by their email address.
+
+        Args:
+            position (int): Position that employee has provided
+
+        Returns:
+            bool: Position exists in the database
+        """
+        self.cursor.callproc("ValidPosition", [position])
+        return [i.fetchone() for i in self.cursor.stored_results()][0] != None
+
+    def find_employee_by_email(self, email: str):
+        """
+        find_employee_by_email Finds a employee account by their email address.
+
+        Args:
+            email (str): Email address that will be used to look up the employee
+
+        Returns:
+            tuple: Located Employee account
+        """
+        self.cursor.callproc("FindEmployeeByEmail", [email])
+        return [i.fetchone() for i in self.cursor.stored_results()][0]
+    
     def __del__(self):
         # Garbage collector goes brrr....
         self.cursor.close()
         self.conn.close()
+
