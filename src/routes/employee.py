@@ -10,6 +10,13 @@ from src.schema import employee
 
 app = APIRouter()
 
+# Get all employees
+@app.get("/", status_code=200)
+async def get_all_employees():
+    db = DBConnection()
+    return db.get_all_employees()
+
+
 # Request to register an employee
 @app.post("/register", status_code=201)
 async def register_employee(employee: employee.Register, response: Response):
@@ -20,10 +27,14 @@ async def register_employee(employee: employee.Register, response: Response):
         return {"error": "Email address is not valid!"}
 
     # Check if the password matches the criteria
-    criteria = re.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,20}$")
+    criteria = re.compile(
+        "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,20}$"
+    )
     if not re.search(criteria, employee.password):
         response.status_code = status.HTTP_400_BAD_REQUEST
-        return {"error": "Password does not meet the set criteria!\nIt has to contain: 1 uppercase, 1 lowercase, 1 special symbol, 6-20 chars long."}
+        return {
+            "error": "Password does not meet the set criteria!\nIt has to contain: 1 uppercase, 1 lowercase, 1 special symbol, 6-20 chars long."
+        }
 
     db = DBConnection()
 
@@ -50,14 +61,15 @@ async def register_employee(employee: employee.Register, response: Response):
     if not db.valid_position_id(employee.position):
         response.status_code = status.HTTP_400_BAD_REQUEST
         return {"error": "Position ID is not valid!"}
-    
+
     # Store the hashed password in the employee object.
     employee.password = PasswordHasher().hash(employee.password)
     db.create_employee(employee)
 
     return Auth.create_token(employee.dict())
 
-#Endpoint for login
+
+# Endpoint for login
 @app.post("/login", status_code=200)
 async def login_employee(employee_data: employee.Login, response: Response):
     db = DBConnection()
@@ -72,12 +84,13 @@ async def login_employee(employee_data: employee.Login, response: Response):
 
     # Move it later to somewhere else or serialize datatime other way.
     try:
-        PasswordHasher().verify(employee['password'], employee_data.password)
+        PasswordHasher().verify(employee["password"], employee_data.password)
         token = Auth.create_token(employee_data.dict())
         return {"success": "Employee has succesfully logged in!", "token": token}
     except Exception as e:
         response.status_code = status.HTTP_401_UNAUTHORIZED
         return {"error": "Provided password is incorrect!"}
+
 
 @app.delete("/", status_code=200)
 async def delete_employee(

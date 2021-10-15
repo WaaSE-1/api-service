@@ -270,6 +270,10 @@ class DBConnection:
         self.cursor.callproc("DeleteEmployee", [email])
         self.conn.commit()
 
+    def get_all_employees(self):
+        self.cursor.callproc("ListEmployees", [])
+        return [i.fetchall() for i in self.cursor.stored_results()][0]
+
     def __del__(self):
         # Garbage collector goes brrr....
         self.cursor.close()
