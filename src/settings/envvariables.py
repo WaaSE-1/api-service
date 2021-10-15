@@ -17,6 +17,9 @@ class Settings:
         if missing:
             raise EnvironmentVariableException(missing)
 
+    # Get environment
+    ENV = os.getenv('ENV')
+
     # Get current directory
     CURRENT_DIR = str(Path(os.getcwd()))
 
