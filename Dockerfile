@@ -6,8 +6,6 @@ ADD main.py /app
 
 WORKDIR /app
 
-RUN python3 pytest
-
 ENV DB_HOSTNAME={DB_HOSTNAME}
 ENV DB_USERNAME={DB_USERNAME}
 ENV DB_PASSWORD={DB_PASSWORD}
@@ -16,6 +14,8 @@ ENV JWT_SECRET={JWT_SECRET}
 
 RUN pip install --upgrade pip && \
 pip install -r ./requirements.txt
+
+RUN python3 pytest
 
 EXPOSE 80
 
