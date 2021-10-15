@@ -6,6 +6,8 @@ from pathlib import Path
 class Settings:
     # Load environment envirables
     load_dotenv()
+    
+    ENV = os.getenv('ENV')
 
     # Ensure that all of the environmental variables are set.
     def check_variables(self) -> None:
