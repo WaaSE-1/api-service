@@ -12,9 +12,7 @@ def test_car_get_all():
 
 def test_car_add_new():
     db = DBConnection()
-    db.cursor.execute(
-        'DELETE from vehicle WHERE id = (select * from (select id from vehicle vh where model = "TestModelOnly")tbltemp)'
-    )
+    db.cursor.execute('DELETE from vehicle WHERE model = "TestModelOnly"')
     db.conn.commit()
     car = {"manufacturer": "BMW", "model": "TestModelOnly", "year": 2100, "price": 1242}
     response = client.post("/", json=car)
@@ -29,7 +27,5 @@ def test_car_add_new():
             "year": 2100,
             "price": 1242,
         }
-    db.cursor.execute(
-        'DELETE from vehicle WHERE id = (select * from (select id from vehicle vh where model = "TestModelOnly")tbltemp)'
-    )
+    db.cursor.execute('DELETE from vehicle WHERE model = "TestModelOnly"')
     db.conn.commit()
