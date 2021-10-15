@@ -57,29 +57,44 @@ async def register_employee(employee: employee.Register, response: Response):
 
     return Auth.create_token(employee.dict())
 
-# Endpoint for login
-# @app.post("/login", status_code=200)
-# async def login_employee(employee_data: employee.Login, response: Response):
-#     db = DBConnection()
+#Endpoint for login
+@app.post("/login", status_code=200)
+async def login_employee(employee_data: employee.Login, response: Response):
+    db = DBConnection()
 
-#     # Find employee
-#     employee = db.find_employee_by_email(employee_data.email)
+    # Find employee
+    employee = db.find_employee_by_email(employee_data.email)
 
-#     # Check if the user account does not exist.
-#     if not employee:
-#         response.status_code = status.HTTP_404_NOT_FOUND
-#         return {"error": "Employee account was not found!"}
+    # Check if the user account does not exist.
+    if not employee:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"error": "Employee account was not found!"}
 
-#     # Move it later to somewhere else or serialize datatime other way.
-#     def defaultconverter(o):
-#         if isinstance(o, datetime.datetime):
-#             return o.__str__()
+    # Move it later to somewhere else or serialize datatime other way.
+    try:
+        PasswordHasher().verify(employee['password'], employee_data.password)
+        token = Auth.create_token(employee_data.dict())
+        return {"success": "Employee has succesfully logged in!", "token": token}
+    except Exception as e:
+        response.status_code = status.HTTP_401_UNAUTHORIZED
+        return {"error": "Provided password is incorrect!"}
 
-#     try:
-#         PasswordHasher().verify(employee["password"], employee_data.password)
-#         serialized_employee = json.loads(json.dumps(employee, default=defaultconverter))
-#         token = Auth.create_token(serialized_employee)
-#         return {"success": "Employee has succesfully logged in!", "token": token}
-#     except Exception as e:
-#         response.status_code = status.HTTP_401_UNAUTHORIZED
-#         return {"error": "Provided password is incorrect!"}
+@app.delete("/", status_code=200)
+async def delete_employee(
+    employee_data: employee.Delete,
+    response: Response,
+    token: str = Depends(Auth.validate_token),
+):
+    print(employee_data)
+    db = DBConnection()
+    employee = db.find_employee_by_email(employee_data.email)
+
+    # Check if the employee account does not exist
+    if not employee:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {"error": "Employee account was not found!"}
+
+    # Delete the account and return success.
+
+    db.delete_employee(employee_data.email)
+    return {"success": "Succesfully deleted the employee account!"}

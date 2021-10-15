@@ -66,4 +66,5 @@ class Auth:
         del to_encode["password"]
         to_encode.update({"expires": (datetime.now() + timedelta(minutes=expires_delta)).__str__()[0:-7]})  # Add expire date
         token = jwt.encode(to_encode, Settings().JWT_SECRET, algorithm="HS256")
+        print(token)
         return dict(access_token=token, token_type="bearer")

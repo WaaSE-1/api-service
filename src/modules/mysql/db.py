@@ -206,6 +206,7 @@ class DBConnection:
         """
         self.cursor.callproc("CreateNewEmployee", employee.get_values())
         self.conn.commit()
+        return self.find_employee_by_email(employee.email)
 
     def valid_dealership_id(self, dealership):
         """
@@ -258,6 +259,16 @@ class DBConnection:
         """
         self.cursor.callproc("FindEmployeeByEmail", [email])
         return [i.fetchone() for i in self.cursor.stored_results()][0]
+
+    def delete_employee(self, email):
+        """
+        delete_employee Deletes a employee account by their email address.
+
+        Args:
+            email (str): Email address that will be used to locate the employee
+        """
+        self.cursor.callproc("DeleteEmployee", [email])
+        self.conn.commit()
     
     def __del__(self):
         # Garbage collector goes brrr....
