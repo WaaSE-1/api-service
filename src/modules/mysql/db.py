@@ -1,6 +1,7 @@
 from mysql.connector import connect
 from src.settings.envvariables import Settings
 
+
 class DBConnection:
     def __init__(self):
         self.conn = connect(**Settings().db_details())
@@ -135,8 +136,7 @@ class DBConnection:
             ],
         )
         self.conn.commit()
-
-
+        return {"success": "Succesfully added a new product!"}
 
     def create_service_request(self, service):
         """
@@ -152,7 +152,7 @@ class DBConnection:
                 service["VIN"],
                 service["service"],
                 service["mechanic"],
-                service["date"],     
+                service["date"],
             ],
         )
         self.conn.commit()
@@ -220,7 +220,7 @@ class DBConnection:
         """
         self.cursor.callproc("ValidDealership", [dealership])
         return [i.fetchone() for i in self.cursor.stored_results()][0] != None
-    
+
     def valid_department_id(self, department):
         """
         valid_department_id Updates a user account by their email address.
@@ -233,7 +233,7 @@ class DBConnection:
         """
         self.cursor.callproc("ValidDepartment", [department])
         return [i.fetchone() for i in self.cursor.stored_results()][0] != None
-    
+
     def valid_position_id(self, position):
         """
         valid_position_id Updates a user account by their email address.
@@ -269,9 +269,8 @@ class DBConnection:
         """
         self.cursor.callproc("DeleteEmployee", [email])
         self.conn.commit()
-    
+
     def __del__(self):
         # Garbage collector goes brrr....
         self.cursor.close()
         self.conn.close()
-
