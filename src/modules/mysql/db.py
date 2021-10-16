@@ -297,8 +297,19 @@ class DBConnection:
         return {"success": "Car has been added successfully!"}
 
     def valid_vehicle(self, id):
-
         self.cursor.callproc("ValidVehicle", [id])
+        return [i.fetchone() for i in self.cursor.stored_results()][0] != None
+
+    def valid_vin(self, vin):
+        self.cursor.callproc("ValidVIN", [vin])
+        return [i.fetchone() for i in self.cursor.stored_results()][0] == None
+
+    def valid_license_plate(self, license):
+        self.cursor.callproc("ValidLicensePlate", [license])
+        return [i.fetchone() for i in self.cursor.stored_results()][0] == None
+
+    def valid_manufacturer(self, brand):
+        self.cursor.callproc("ValidVIN", [brand])
         return [i.fetchone() for i in self.cursor.stored_results()][0] != None
 
     def __del__(self):

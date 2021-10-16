@@ -21,7 +21,11 @@ async def register_user():
 # Create a new car
 @app.post("/", status_code=201)
 async def create_car(car: car.Car):
+
     db = DBConnection()
+    if not db.valid_manufacturer(car.manufacturer):
+        return {"error": "Specified manufacturer is not available"}
+
     return db.create_new_car(car.dict())
 
 
