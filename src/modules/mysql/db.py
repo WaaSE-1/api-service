@@ -103,6 +103,10 @@ class DBConnection:
             [car["manufacturer"], car["model"], car["year"], car["price"]],
         )
         self.conn.commit()
+        return {
+            "success": "Car has been created successfully",
+            "id": [i.fetchall() for i in self.cursor.stored_results()][0][0]["id"],
+        }
 
     def get_car_by_id(self, id):
         self.cursor.callproc("GetCarDetails", [id])
