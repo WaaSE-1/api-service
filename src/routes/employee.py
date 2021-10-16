@@ -84,7 +84,7 @@ async def login_employee(employee_data: employee.Login, response: Response):
     # Move it later to somewhere else or serialize datatime other way.
     try:
         PasswordHasher().verify(employee["password"], employee_data.password)
-        token = Auth.create_token(employee_data.dict())
+        token = Auth.create_token(employee)
         return {"success": "Employee has succesfully logged in!", "token": token}
     except Exception as e:
         response.status_code = status.HTTP_401_UNAUTHORIZED
