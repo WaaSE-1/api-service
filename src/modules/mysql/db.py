@@ -189,6 +189,7 @@ class DBConnection:
             "DeleteCarPartInventory", [product["part"], product["dealership"]]
         )
         self.conn.commit()
+        return {"success": "Product has been succesfully deleted!"}
 
     def get_all_services(self):
         self.cursor.callproc("ListAvailableServices", [])
