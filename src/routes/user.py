@@ -37,10 +37,15 @@ async def register_user(user: user.Register, response: Response):
             "error": "Password does not meet the set criteria!\nIt has to contain: 1 uppercase, 1 lowercase, 1 special symbol, 6-20 chars long."
         }
 
+    def defaultconverter(o):
+        if isinstance(o, datetime.datetime):
+            return o.__str__()
+
     # Store the hashed password in the User object.
     user.password = PasswordHasher().hash(user.password)
-    db.create_user(user)
-    return Auth.create_token(user.dict())
+    user = db.create_user(user)
+    serialized_user = json.loads(json.dumps(user, default=defaultconverter))
+    return Auth.create_token(serialized_user)
 
 
 # Endpoint for login
@@ -48,7 +53,6 @@ async def register_user(user: user.Register, response: Response):
 async def login_user(user_data: user.Login, response: Response):
     db = DBConnection()
     user = db.find_user_by_email(user_data.email)
-
     # Check if the user account does not exist.
     if not user:
         response.status_code = status.HTTP_404_NOT_FOUND
