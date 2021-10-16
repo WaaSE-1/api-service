@@ -275,6 +275,27 @@ class DBConnection:
         self.cursor.callproc("ListEmployees", [])
         return [i.fetchall() for i in self.cursor.stored_results()][0]
 
+    def get_user_cars(self, id):
+        self.cursor.callproc("GetCustomerVehicle", [id])
+        return [i.fetchall() for i in self.cursor.stored_results()][0]
+
+    def add_car_for_customer(self, vehicle):
+        self.cursor.callproc(
+            "AssignCustomerVehicle",
+            [
+                vehicle["VIN"],
+                vehicle["customer_id"],
+                vehicle["vehicle_id"],
+                vehicle["license_plate"],
+            ],
+        )
+        self.conn.commit()
+
+    def valid_vehicle(self, id):
+
+        self.cursor.callproc("ValidVehicle", [id])
+        return [i.fetchone() for i in self.cursor.stored_results()][0] != None
+
     def __del__(self):
         # Garbage collector goes brrr....
         self.cursor.close()

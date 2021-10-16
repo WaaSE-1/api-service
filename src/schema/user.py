@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class Register(BaseModel):
     firstname: str
     lastname: str
@@ -28,3 +29,10 @@ class Login(BaseModel):
 
 class Delete(BaseModel):
     email: str
+
+
+class Vehicle(BaseModel):
+    VIN: str
+    customer_id: int
+    vehicle_id: int
+    license_plate: str

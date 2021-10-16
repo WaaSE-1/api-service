@@ -130,3 +130,22 @@ async def delete_user(
 
     db.delete_user(user_data.email)
     return {"success": "Succesfully deleted the user account!"}
+
+
+# Get all vehicles the current customer has.
+@app.get("/garage", status_code=200)
+async def get_user_cars(token: str = Depends(Auth.validate_token)):
+    db = DBConnection()
+    return db.get_user_cars(token["id"])
+
+
+# Add a car for a user
+@app.post("/garage", status_code=200)
+async def add_car_for_customer(
+    vehicle: user.Vehicle, token: str = Depends(Auth.validate_token)
+):
+    # Need to check if VIN and license plate does not already exist, otherwise it will crash
+    db = DBConnection()
+    if not db.valid_vehicle(vehicle.vehicle_id):
+        return {"error": f"Vehicle with id: {vehicle.vehicle_id} was not found"}
+    return db.add_car_for_customer(vehicle.dict())
