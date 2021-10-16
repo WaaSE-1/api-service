@@ -294,6 +294,7 @@ class DBConnection:
             ],
         )
         self.conn.commit()
+        return {"success": "Car has been added successfully!"}
 
     def valid_vehicle(self, id):
 
