@@ -17,12 +17,12 @@ app.add_middleware(
 )
 
 # Include/define our routes
-app.include_router(user.app, prefix="/users")
-app.include_router(employee.app, prefix="/employees")
-app.include_router(car.app, prefix="/cars")
-app.include_router(inventory.app, prefix="/inventory")
-app.include_router(product.app, prefix="/products")
-app.include_router(service.app, prefix="/services/requests")
+app.include_router(user.app, prefix="/users", tags=['Users'])
+app.include_router(employee.app, prefix="/employees", tags=['Employees'])
+app.include_router(car.app, prefix="/cars", tags=['Cars'])
+app.include_router(inventory.app, prefix="/inventory", tags=['Inventory'])
+app.include_router(product.app, prefix="/products", tags=['Product'])
+app.include_router(service.app, prefix="/services/requests", tags=['Service'])
 
 # Launch the app with uvicorn and handle environment
 if Settings().ENV == 'prod':
