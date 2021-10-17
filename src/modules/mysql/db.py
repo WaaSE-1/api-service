@@ -198,6 +198,10 @@ class DBConnection:
     def get_all_services(self):
         self.cursor.callproc("ListAvailableServices", [])
         return [i.fetchall() for i in self.cursor.stored_results()][0]
+    
+    def get_service_history(self, customer_id):
+        self.cursor.callproc("FindServiceRequestsByCustomer", [customer_id])
+        return [i.fetchall() for i in self.cursor.stored_results()][0]
 
     def create_employee(self, employee):
         """
