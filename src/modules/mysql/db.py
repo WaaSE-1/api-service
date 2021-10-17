@@ -130,6 +130,8 @@ class DBConnection:
         self.cursor.callproc(
             "CreateNewCarPart",
             [
+                product["name"],
+                product["description"],
                 product["manufacturer"],
                 product["weight"],
                 product["dimensions"],
