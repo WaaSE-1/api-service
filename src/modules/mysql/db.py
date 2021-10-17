@@ -313,7 +313,7 @@ class DBConnection:
         return [i.fetchone() for i in self.cursor.stored_results()][0] == None
 
     def valid_manufacturer(self, brand):
-        self.cursor.callproc("ValidVIN", [brand])
+        self.cursor.callproc("ValidManufacturer", [brand])
         return [i.fetchone() for i in self.cursor.stored_results()][0] != None
 
     def __del__(self):
