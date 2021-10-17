@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class Product(BaseModel):
     name: str
     description: str
@@ -11,6 +12,6 @@ class Product(BaseModel):
     serial_number: str
     price: float
 
+
 class Delete(BaseModel):
-    part: int
-    dealership: str
+    id: int

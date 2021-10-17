@@ -192,7 +192,7 @@ class DBConnection:
         Delete a product from the inventory
         """
         self.cursor.callproc(
-            "DeleteCarPartInventory", [product["part"], product["dealership"]]
+            "DeleteCarPartInventory", [product["id"]]
         )
         self.conn.commit()
         return {"success": "Product has been succesfully deleted!"}
