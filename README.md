@@ -8,7 +8,6 @@ Back-end API service for the car delaership platform developed for a educational
 - Patrick Klausgaard
 - Jacob Sibbern
 - Sebastian Arnvig
-- Silke Castrone
 - Țurcan Corina
 
 #### Coding Standards
