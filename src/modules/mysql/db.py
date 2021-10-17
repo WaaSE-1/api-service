@@ -1,5 +1,6 @@
 from mysql.connector import connect
 from src.settings.envvariables import Settings
+from typing import List, Dict
 
 
 class DBConnection:
@@ -66,7 +67,7 @@ class DBConnection:
         )
         self.conn.commit()
 
-    def valid_zip_code(self, zip):
+    def valid_zip_code(self, zip) -> List[dict]:
         """
         valid_zip_code Updates a user account by their email address.
 
@@ -79,7 +80,7 @@ class DBConnection:
         self.cursor.callproc("ValidZIP", [zip])
         return [i.fetchone() for i in self.cursor.stored_results()][0] != None
 
-    def get_all_cars(self):
+    def get_all_cars(self) -> List[dict]:
         """
         get_all_cars Returns a list of cars available for purchase
 
@@ -89,7 +90,7 @@ class DBConnection:
         self.cursor.callproc("ListAvailableCars", [])
         return [i.fetchall() for i in self.cursor.stored_results()]
 
-    def create_new_car(self, car):
+    def create_new_car(self, car) -> Dict:
         """
         Create a new car with a single object with car details
         Details are manufacturer, model, year, brand, dealership, the quantity availble and price.
@@ -108,25 +109,27 @@ class DBConnection:
             "id": [i.fetchall() for i in self.cursor.stored_results()][0][0]["id"],
         }
 
-    def get_car_by_id(self, id):
+    def get_car_by_id(self, id) -> List[dict]:
         self.cursor.callproc("GetCarDetails", [id])
         return [i.fetchone() for i in self.cursor.stored_results()][0]
 
-    def update_vehicle_inventory(self, inventory):
+    def update_vehicle_inventory(self, inventory) -> Dict:
         self.cursor.callproc(
             "UpdateVehicleInventory",
             [inventory["vehicle"], inventory["dealership"], inventory["inventory"]],
         )
         self.conn.commit()
+        return {"success": "Vehicle has been added to the dealership!"}
 
-    def update_car_part_inventory(self, carpart):
+    def update_car_part_inventory(self, carpart) -> Dict:
         self.cursor.callproc(
             "UpdateCarPartInventory",
             [carpart["car_part_id"], carpart["dealership"], carpart["inventory"]],
         )
         self.conn.commit()
+        return {"success": "Succesfully updated a car part!"}
 
-    def create_new_product(self, product):
+    def create_new_product(self, product) -> Dict:
         self.cursor.callproc(
             "CreateNewCarPart",
             [
@@ -144,7 +147,7 @@ class DBConnection:
         self.conn.commit()
         return {"success": "Succesfully added a new product!"}
 
-    def create_service_request(self, service):
+    def create_service_request(self, service) -> Dict:
         """
         Find all of the products available for sale
 
@@ -162,8 +165,9 @@ class DBConnection:
             ],
         )
         self.conn.commit()
+        return {"success": "Service request has been created succesfully!"}
 
-    def get_all_products(self):
+    def get_all_products(self) -> List[dict]:
         """
         Find all of the products available for sale
 
@@ -174,7 +178,7 @@ class DBConnection:
         self.cursor.callproc("ListAvailableParts", [])
         return [i.fetchall() for i in self.cursor.stored_results()][0]
 
-    def remove_car(self, car):
+    def remove_car(self, car) -> Dict:
         """
         Remove a specific car from inventory
 
@@ -186,8 +190,9 @@ class DBConnection:
             "DeleteVehicleInventory", [car["vehicle"], car["dealership"]]
         )
         self.conn.commit()
+        return {"success": "Car has been succesfully deleted!"}
 
-    def delete_product(self, product):
+    def delete_product(self, product) -> Dict:
         """
         Delete a product from the inventory
         """
@@ -197,15 +202,30 @@ class DBConnection:
         self.conn.commit()
         return {"success": "Product has been succesfully deleted!"}
 
-    def get_all_services(self):
+    def get_all_services(self) -> List[dict]:
+        """
+        get_all_services List of services offered by the car dealership
+
+        Returns:
+            List: List of services.
+        """
         self.cursor.callproc("ListAvailableServices", [])
         return [i.fetchall() for i in self.cursor.stored_results()][0]
-    
-    def get_service_history(self, customer_id):
+
+    def get_service_history(self, customer_id) -> List[dict]:
+        """
+        get_service_history Service history for a given user.
+
+        Args:
+            customer_id (int): Customer ID.
+
+        Returns:
+            List: List of services done to user's cars.
+        """
         self.cursor.callproc("FindServiceRequestsByCustomer", [customer_id])
         return [i.fetchall() for i in self.cursor.stored_results()][0]
 
-    def create_employee(self, employee):
+    def create_employee(self, employee) -> Dict:
         """
         create_employee Saves the created employee to the database
 
@@ -219,7 +239,7 @@ class DBConnection:
         self.conn.commit()
         return {"success": "Created a new employee!"}
 
-    def valid_dealership_id(self, dealership):
+    def valid_dealership_id(self, dealership) -> bool:
         """
         valid_dealership_id Updates a user account by their email address.
 
@@ -232,7 +252,7 @@ class DBConnection:
         self.cursor.callproc("ValidDealership", [dealership])
         return [i.fetchone() for i in self.cursor.stored_results()][0] != None
 
-    def valid_department_id(self, department):
+    def valid_department_id(self, department) -> bool:
         """
         valid_department_id Updates a user account by their email address.
 
@@ -245,7 +265,7 @@ class DBConnection:
         self.cursor.callproc("ValidDepartment", [department])
         return [i.fetchone() for i in self.cursor.stored_results()][0] != None
 
-    def valid_position_id(self, position):
+    def valid_position_id(self, position) -> bool:
         """
         valid_position_id Updates a user account by their email address.
 
@@ -258,7 +278,7 @@ class DBConnection:
         self.cursor.callproc("ValidPosition", [position])
         return [i.fetchone() for i in self.cursor.stored_results()][0] != None
 
-    def find_employee_by_email(self, email: str):
+    def find_employee_by_email(self, email: str) -> List[dict]:
         """
         find_employee_by_email Finds a employee account by their email address.
 
@@ -271,7 +291,7 @@ class DBConnection:
         self.cursor.callproc("FindEmployeeByEmail", [email])
         return [i.fetchone() for i in self.cursor.stored_results()][0]
 
-    def delete_employee(self, email):
+    def delete_employee(self, email) -> None:
         """
         delete_employee Deletes a employee account by their email address.
 
@@ -281,15 +301,39 @@ class DBConnection:
         self.cursor.callproc("DeleteEmployee", [email])
         self.conn.commit()
 
-    def get_all_employees(self):
+    def get_all_employees(self) -> List[dict]:
+        """
+        get_all_employees Calls a procedure to return a list of active employees.
+
+        Returns:
+            list: List of dictionaries representing employees
+        """
         self.cursor.callproc("ListEmployees", [])
         return [i.fetchall() for i in self.cursor.stored_results()][0]
 
-    def get_user_cars(self, id):
+    def get_user_cars(self, id: int) -> List[dict]:
+        """
+        get_user_cars Calls a procedure to return a list of user's cars.
+
+        Args:
+            id (int): customer ID.
+
+        Returns:
+            cars (list): List of cars that are in users garage.
+        """
         self.cursor.callproc("GetCustomerVehicle", [id])
         return [i.fetchall() for i in self.cursor.stored_results()][0]
 
-    def add_car_for_customer(self, vehicle):
+    def add_car_for_customer(self, vehicle) -> Dict:
+        """
+        add_car_for_customer Adds a car to user's garage.
+
+        Args:
+            vehicle (dict): Details of a vehicle to be added to users garage.
+
+        Returns:
+            dict: success message.
+        """
         self.cursor.callproc(
             "AssignCustomerVehicle",
             [
@@ -302,23 +346,63 @@ class DBConnection:
         self.conn.commit()
         return {"success": "Car has been added successfully!"}
 
-    def valid_vehicle(self, id):
+    def valid_vehicle(self, id) -> bool:
+        """
+        valid_vehicle Check that vehicle with given ID exists in the vehicle table.
+
+        Args:
+            id (int): Vehicle ID.
+
+        Returns:
+            bool: Vehicle was found in the database
+        """
         self.cursor.callproc("ValidVehicle", [id])
         return [i.fetchone() for i in self.cursor.stored_results()][0] != None
 
-    def valid_vin(self, vin):
+    def valid_vin(self, vin) -> bool:
+        """
+        valid_vine Check that vehicle with given VIN doesn't exist in the vehicle table.
+
+        Args:
+            vin (str): Vehicle vin.
+
+        Returns:
+            bool: VIN was not found in the database
+        """
         self.cursor.callproc("ValidVIN", [vin])
         return [i.fetchone() for i in self.cursor.stored_results()][0] == None
 
-    def valid_license_plate(self, license):
+    def valid_license_plate(self, license) -> bool:
+        """
+        valid_license_plate Check that vehicle with given license plate doesn't exist in the vehicle table.
+
+        Args:
+            license (str): Vehicle license plate.
+
+        Returns:
+            bool: License plate was not found in the database
+        """
         self.cursor.callproc("ValidLicensePlate", [license])
         return [i.fetchone() for i in self.cursor.stored_results()][0] == None
 
-    def valid_manufacturer(self, brand):
+    def valid_manufacturer(self, brand) -> bool:
+        """
+        valid_manufacturer Check that manufacturer exists in the manufacturer table.
+
+        Args:
+            brand (str): Manufacturer.
+
+        Returns:
+            bool: Manufacturer was found in the database
+        """
         self.cursor.callproc("ValidManufacturer", [brand])
         return [i.fetchone() for i in self.cursor.stored_results()][0] != None
 
     def __del__(self):
-        # Garbage collector goes brrr....
+        """
+        Close the database connection when all of the references to the object
+        have been removed.
+        akka... Garbage collector goes brrr....
+        """
         self.cursor.close()
         self.conn.close()
