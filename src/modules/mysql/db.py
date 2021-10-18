@@ -196,9 +196,7 @@ class DBConnection:
         """
         Delete a product from the inventory
         """
-        self.cursor.callproc(
-            "DeleteCarPartInventory", [product["id"]]
-        )
+        self.cursor.callproc("DeleteCarPartInventory", [product["id"]])
         self.conn.commit()
         return {"success": "Product has been succesfully deleted!"}
 
@@ -396,6 +394,19 @@ class DBConnection:
             bool: Manufacturer was found in the database
         """
         self.cursor.callproc("ValidManufacturer", [brand])
+        return [i.fetchone() for i in self.cursor.stored_results()][0] != None
+
+    def valid_service(self, id) -> bool:
+        """
+        valid_service Check that service id exists in the service_catalog table.
+
+        Args:
+            id (int): Service ID.
+
+        Returns:
+            bool: Service with provided ID was found in the database
+        """
+        self.cursor.callproc("ValidService", [id])
         return [i.fetchone() for i in self.cursor.stored_results()][0] != None
 
     def __del__(self):
