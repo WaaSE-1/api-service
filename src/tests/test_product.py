@@ -14,6 +14,6 @@ def test_remove_product():
     db = DBConnection()
     carpart = {"car_part_id": 7, "dealership": "TestDealership", "inventory": 69}
     db.update_car_part_inventory(carpart)
-    product = {"part": 7, "dealership": "TestDealership"}
+    product = {"id": 7}
     response = client.delete("/", json=product)
     assert response.status_code == 200
