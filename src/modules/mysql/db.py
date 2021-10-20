@@ -409,6 +409,10 @@ class DBConnection:
         self.cursor.callproc("ValidService", [id])
         return [i.fetchone() for i in self.cursor.stored_results()][0] != None
 
+    def get_all_dealerships(self):
+        self.cursor.callproc("ListDealerships", [])
+        return [i.fetchall() for i in self.cursor.stored_results()][0]
+
     def __del__(self):
         """
         Close the database connection when all of the references to the object
