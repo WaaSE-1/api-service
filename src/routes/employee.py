@@ -17,6 +17,13 @@ async def get_all_employees():
     return db.get_all_employees()
 
 
+# Get all employees
+@app.get("/positions", status_code=200)
+async def get_all_positions():
+    db = DBConnection()
+    return db.get_all_positions()
+
+
 # Request to register an employee
 @app.post("/register", status_code=201)
 async def register_employee(employee: employee.Register, response: Response):
