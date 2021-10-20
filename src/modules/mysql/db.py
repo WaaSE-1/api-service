@@ -413,6 +413,10 @@ class DBConnection:
         self.cursor.callproc("ListDealerships", [])
         return [i.fetchall() for i in self.cursor.stored_results()][0]
 
+    def get_all_departments(self):
+        self.cursor.callproc("ListDepartments", [])
+        return [i.fetchall() for i in self.cursor.stored_results()][0]
+
     def __del__(self):
         """
         Close the database connection when all of the references to the object

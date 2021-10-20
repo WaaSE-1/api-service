@@ -1,6 +1,15 @@
 from fastapi import FastAPI
 import uvicorn
-from src.routes import user, employee, car, inventory, product, service, dealership
+from src.routes import (
+    user,
+    employee,
+    car,
+    inventory,
+    product,
+    service,
+    dealership,
+    department,
+)
 from fastapi.middleware.cors import CORSMiddleware
 from src.settings.envvariables import Settings
 
@@ -24,6 +33,7 @@ app.include_router(inventory.app, prefix="/inventory", tags=["Inventory"])
 app.include_router(product.app, prefix="/products", tags=["Product"])
 app.include_router(service.app, prefix="/services/requests", tags=["Service"])
 app.include_router(dealership.app, prefix="/dealerships", tags=["Dealership"])
+app.include_router(department.app, prefix="/departments", tags=["Department"])
 
 # Launch the app with uvicorn and handle environment
 if Settings().ENV == "prod":
