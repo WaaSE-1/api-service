@@ -23,6 +23,9 @@ class Settings:
     # JWT Secret required for authentication
     JWT_SECRET = os.getenv("JWT_SECRET")
 
+    # PORT - REMOVE IF NOT USING HEROKU
+    PORT = os.getenv("PORT")
+
     # MySQL connection details
     def db_details(self):
         return {

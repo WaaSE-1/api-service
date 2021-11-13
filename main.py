@@ -39,8 +39,8 @@ app.include_router(department.app, prefix="/departments", tags=["Department"])
 if Settings().ENV == "prod":
     if __name__ == "__main__":
         print("Launching Production Environment")
-        uvicorn.run("main:app", host="0.0.0.0", port=80, reload=False, workers=3)
+        uvicorn.run("main:app", host="0.0.0.0", port=Settings().PORT, reload=False, workers=3)
 else:
     if __name__ == "__main__":
         print("Launching Development Environment")
-        uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True, workers=1)
+        uvicorn.run("main:app", host="0.0.0.0", port=Settings().PORT, reload=True, workers=1)
